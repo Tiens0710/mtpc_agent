@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/mtpc/public_html/agent/
+    - /bin/cp -f index.html $DEPLOYPATH
+    - /bin/cp -R mtpc-assets $DEPLOYPATH
