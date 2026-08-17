@@ -2054,7 +2054,14 @@ const aiBootOverlay = document.getElementById('aiBootOverlay');
                             socket.send(JSON.stringify({
                                 setup: {
                                     model: `models/${aiLiveModel}`,
-                                    generationConfig: { responseModalities: ['AUDIO'] },
+                                    generationConfig: {
+                                        responseModalities: ['AUDIO'],
+                                        speechConfig: {
+                                            voiceConfig: {
+                                                prebuiltVoiceConfig: { voiceName: 'Kore' }
+                                            }
+                                        }
+                                    },
                                     inputAudioTranscription: {},
                                     outputAudioTranscription: {},
                                     sessionResumption: {},
@@ -2174,7 +2181,10 @@ const aiBootOverlay = document.getElementById('aiBootOverlay');
                 window.speechSynthesis.cancel();
                 aiSpeechActive = true;
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = navigator.language || 'en-US';
+                const voices = window.speechSynthesis.getVoices();
+                const femaleVoice = voices.find((voice) => /female|woman|girl|vi-VN|vi_VN/i.test(`${voice.name} ${voice.lang}`));
+                utterance.voice = femaleVoice || voices.find((voice) => /^vi(-|_)/i.test(voice.lang)) || null;
+                utterance.lang = utterance.voice?.lang || 'vi-VN';
                 utterance.rate = 1.02;
                 utterance.pitch = 1.06;
                 utterance.addEventListener('start', () => setAiState('speaking', 'SPEAKING // RESPONSE'));
