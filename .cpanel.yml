@@ -6,3 +6,5 @@ deployment:
     - /bin/cp -R mtpc-assets $DEPLOYPATH
     - /bin/mkdir -p $DEPLOYPATH/api
     - /bin/cp -R api/* $DEPLOYPATH/api/
+    - /bin/cp -f api/chat56.php $DEPLOYPATH/api/chat.php
+    - /bin/cp -f api/live-token56.php $DEPLOYPATH/api/live-token.php
