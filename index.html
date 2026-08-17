@@ -1634,50 +1634,6 @@ section{padding:84px 0}.label{text-align:center;color:var(--g)}.title{text-align
 <script>
 const header=document.getElementById('header'),nav=document.getElementById('nav');document.getElementById('menuBtn').onclick=()=>nav.classList.toggle('open');addEventListener('scroll',()=>header.classList.toggle('scrolled',scrollY>20));const slides=[...document.querySelectorAll('.slide')],dots=[...document.querySelectorAll('.dot')];let current=0;function show(i){current=i;slides.forEach((s,n)=>s.classList.toggle('active',n===i));dots.forEach((d,n)=>d.classList.toggle('active',n===i))}dots.forEach(d=>d.onclick=()=>show(+d.dataset.slide));setInterval(()=>show((current+1)%slides.length),5000);const search=document.getElementById('search');document.getElementById('searchBtn').onclick=()=>{search.classList.add('open');document.getElementById('searchInput').focus()};search.onclick=e=>{if(e.target===search)search.classList.remove('open')};document.addEventListener('keydown',e=>{if(e.key==='Escape')search.classList.remove('open')});const chat=document.getElementById('chat');document.getElementById('chatBtn').onclick=()=>chat.classList.toggle('open');document.getElementById('chatClose').onclick=()=>chat.classList.remove('open');document.getElementById('chatForm').onsubmit=e=>{e.preventDefault();const input=document.getElementById('chatInput'),body=document.getElementById('chatBody'),t=input.value.trim();if(!t)return;body.insertAdjacentHTML('beforeend','<div class="msg user">'+t.replace(/[<>]/g,'')+'</div><div class="msg bot">Cảm ơn bạn! Vui lòng xem thông tin tại mtpc.edu.vn hoặc liên hệ Zalo tuyển sinh nhé.</div>');input.value='';body.scrollTop=body.scrollHeight};
 </script>
-</body><style>.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}</style>
-<script>
-(() => {
-  const form = document.getElementById('chatForm');
-  const input = document.getElementById('chatInput');
-  const body = document.getElementById('chatBody');
-  if (!form || !input || !body) return;
-  const history = [{ role: 'model', text: 'Xin chào! Mình là Nhi. Bạn quan tâm ngành học nào ạ?' }];
-  const addMessage = (role, text) => {
-    const message = document.createElement('div');
-    message.className = `msg ${role === 'user' ? 'user' : 'bot'}`;
-    message.textContent = text;
-    body.appendChild(message);
-    body.scrollTop = body.scrollHeight;
-    return message;
-  };
-  form.onsubmit = async (event) => {
-    event.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = '';
-    addMessage('user', text);
-    history.push({ role: 'user', text });
-    const loading = addMessage('model', 'Nhi đang suy nghĩ...');
-    form.querySelector('button').disabled = true;
-    try {
-      const response = await fetch('/api/chat.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history }),
-      });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.error || 'AI gateway offline.');
-      loading.remove();
-      addMessage('model', payload.text || 'Mình chưa có câu trả lời phù hợp.');
-      history.push({ role: 'model', text: payload.text || '' });
-    } catch (error) {
-      loading.textContent = error.message || 'Không thể kết nối trợ lý lúc này.';
-    } finally {
-      form.querySelector('button').disabled = false;
-      input.focus();
-    }
-  };
-})();
 
 <script>
 (() => {
@@ -2326,5 +2282,8 @@ const aiBootOverlay = document.getElementById('aiBootOverlay');
 
             
 })();
-</script></html>
+</script>
+</body>
+</html>
+
 
