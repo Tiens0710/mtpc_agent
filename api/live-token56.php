@@ -32,14 +32,7 @@ if (!$apiKey) {
 $payload = json_encode(array(
     'uses' => 1,
     'expireTime' => gmdate('Y-m-d\TH:i:s\Z', time() + 1800),
-    'newSessionExpireTime' => gmdate('Y-m-d\TH:i:s\Z', time() + 60),
-    'liveConnectConstraints' => array(
-        'model' => 'models/gemini-3.1-flash-live-preview',
-        'config' => array(
-            'responseModalities' => array('AUDIO'),
-            'sessionResumption' => new stdClass()
-        )
-    )
+    'newSessionExpireTime' => gmdate('Y-m-d\TH:i:s\Z', time() + 60)
 ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 $curl = curl_init('https://generativelanguage.googleapis.com/v1beta/auth_tokens');
@@ -56,7 +49,8 @@ curl_close($curl);
 $response = is_string($result) ? json_decode($result, true) : null;
 
 if ($status < 200 || $status >= 300 || !is_array($response) || empty($response['name'])) {
-    mtpc_live_respond(502, array('error' => 'Gemini Live could not issue a session token.'));
+    $upstreamMessage = is_array($response) && isset($response['error']['message']) ? $response['error']['message'] : 'Unknown upstream response.';
+    mtpc_live_respond(502, array('error' => 'Gemini Live could not issue a session token.', 'upstreamStatus' => $status, 'upstreamMessage' => $upstreamMessage));
 }
 
 mtpc_live_respond(200, array(
