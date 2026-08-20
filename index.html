@@ -58,9 +58,11 @@
     .chat-window,.chat-bubble{display:none!important}.ai-welcome{background:radial-gradient(circle at 50% 44%,rgba(210,255,218,.2),rgba(4,43,21,.75) 61%,rgba(2,22,11,.91));backdrop-filter:blur(10px)}.ai-welcome-card{width:min(440px,100%);padding:38px 26px 24px;border:0;border-radius:34px;background:radial-gradient(circle at 50% 34%,rgba(184,255,194,.14),rgba(4,47,23,.32) 57%,rgba(3,25,13,.52));box-shadow:none}.ai-welcome-card:before{inset:0;border-color:rgba(218,255,221,.25);border-radius:34px}.ai-welcome h2,.ai-welcome-lead,.ai-welcome-form,.ai-welcome-suggestions,.ai-welcome-note{display:none}.ai-welcome-eyebrow{margin:0 0 21px;color:#e6ffea;font-size:.68rem;letter-spacing:.18em}.ai-welcome-eyebrow i{background:#8effa1;box-shadow:0 0 13px #8effa1}.ai-orb-stage{width:248px;height:248px;margin:0 auto 8px;cursor:pointer;outline:none;--voice-level:0}.ai-orb-stage:focus-visible{border-radius:50%;box-shadow:0 0 0 4px rgba(219,255,223,.7)}.ai-orb{width:186px;height:186px;transition:transform .2s ease}.ai-orb-stage:hover .ai-orb{transform:scale(1.035)}.ai-welcome-skip{display:inline-block;margin-top:13px;padding:6px 10px;color:rgba(229,255,233,.76);font-size:.68rem;text-decoration:none}.ai-welcome[data-voice-state="listening"] .ai-orb-field{animation:none;transform:scale(calc(1 + var(--voice-level) * .14));box-shadow:0 0 calc(24px + var(--voice-level) * 44px) rgba(104,247,133,.88),0 0 calc(72px + var(--voice-level) * 74px) rgba(15,136,57,.58),inset 0 0 calc(26px + var(--voice-level) * 24px) rgba(159,255,178,.38);transition:transform 65ms linear,box-shadow 65ms linear}.ai-welcome[data-voice-state="listening"] .ai-orb-ring{animation:mtpcVoiceSonar 1.8s ease-out infinite;opacity:calc(.26 + var(--voice-level) * .7)}.ai-welcome[data-voice-state="listening"] .ai-orb-ring:nth-child(2){animation-delay:.6s}.ai-welcome[data-voice-state="listening"] .ai-orb-ring:nth-child(3){animation-delay:1.2s}.ai-welcome[data-voice-state="listening"] .ai-orb-core{animation:none;transform:scale(calc(1 + var(--voice-level) * .16));filter:brightness(calc(1 + var(--voice-level) * .45));transition:transform 65ms linear,filter 65ms linear}.ai-welcome[data-voice-state="listening"] .ai-orb-eq{opacity:1}.ai-welcome[data-voice-state="thinking"] .ai-orb-field{animation:mtpcThinking 1.25s linear infinite}.ai-welcome[data-voice-state="speaking"] .ai-orb-field{animation:mtpcVoiceSpeak .72s ease-in-out infinite}.ai-welcome[data-voice-state="speaking"] .ai-orb-ring{animation:mtpcVoiceSonar 1.35s ease-out infinite;opacity:.82}.ai-welcome[data-voice-state="speaking"] .ai-orb-eq{opacity:1}.ai-orb-eq{opacity:.22;transition:opacity .2s}.ai-welcome[data-voice-state="listening"] .ai-eq-bar{animation:none;transform:scaleY(var(--bar-level,.35));opacity:calc(.45 + var(--voice-level) * .55);transition:transform 65ms linear,opacity 65ms linear}.ai-orb-core:after{content:"";position:absolute;inset:35%;border:2px solid rgba(255,255,255,.9);border-radius:50%;box-shadow:0 0 13px rgba(255,255,255,.85)}@keyframes mtpcVoiceSonar{0%{transform:scale(.62);opacity:0}18%{opacity:.9}100%{transform:scale(1.58);opacity:0}}@keyframes mtpcThinking{to{transform:rotate(360deg) scale(1.03)}}@keyframes mtpcVoiceSpeak{0%,100%{transform:scale(.98)}50%{transform:scale(1.1)}}@media(max-width:600px){.ai-welcome-card{width:min(360px,100%);padding:31px 18px 20px}.ai-orb-stage{width:205px;height:205px}.ai-orb{width:154px;height:154px}.ai-welcome-eyebrow{font-size:.61rem}}
     /* Clearly visible microphone waveform, driven by real input level. */
     .ai-voice-wave{display:flex;align-items:center;justify-content:center;gap:4px;width:190px;height:42px;margin:-9px auto 1px;opacity:.16;transition:opacity .2s,filter .2s}.ai-voice-wave i{display:block;width:3px;height:7px;border-radius:99px;background:linear-gradient(to top,#16813b,#b9ffbf);box-shadow:0 0 8px rgba(115,255,141,.78);transform:scaleY(var(--voice-wave,.32));transition:transform 55ms linear,opacity 55ms linear;transform-origin:center}.ai-welcome[data-voice-state="listening"] .ai-voice-wave{opacity:1;filter:drop-shadow(0 0 7px rgba(119,255,142,.55))}.ai-welcome[data-voice-state="listening"] .ai-voice-wave i{background:linear-gradient(to top,#18a448,#effff0)}.ai-welcome[data-voice-state="speaking"] .ai-voice-wave{opacity:.42}@media(max-width:600px){.ai-voice-wave{width:158px;height:35px;margin-top:-11px;gap:3px}.ai-voice-wave i{width:3px}}
-    .ai-welcome[data-voice-state="speaking"] .ai-welcome-eyebrow:after{content:" · GEMINI TTS / AOEDE";color:#d8ffdf;font-weight:800}
+    .ai-welcome[data-voice-state="speaking"] .ai-welcome-eyebrow:after{content:" · GEMINI TTS / LEDA";color:#d8ffdf;font-weight:800}
     /* Companion layout: a light, portfolio-like assistant layer instead of a blocking modal. */
     .ai-welcome{display:block;padding:0;overflow:hidden;background:linear-gradient(90deg,rgba(1,33,17,.48) 0%,rgba(4,49,24,.16) 46%,rgba(1,31,16,.38) 100%);backdrop-filter:none;pointer-events:none}.ai-welcome:before{content:"";position:absolute;inset:0;opacity:.58;background-image:linear-gradient(rgba(119,244,139,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(119,244,139,.055) 1px,transparent 1px);background-size:100% 7px,64px 100%;mask-image:linear-gradient(to bottom,transparent,black 19%,black 83%,transparent)}.ai-welcome-card{display:grid;grid-template-columns:minmax(300px,1fr) minmax(330px,.8fr);align-items:center;gap:clamp(42px,8vw,150px);width:min(1450px,100%);height:100%;min-height:640px;margin:0 auto;padding:clamp(112px,14vh,170px) clamp(34px,10vw,190px) 92px;border:0;border-radius:0;background:transparent;box-shadow:none;text-align:left}.ai-welcome-card:before{display:none}.ai-welcome-intro{position:relative;z-index:1;max-width:590px;padding:22px 0 27px;border-top:1px solid rgba(175,255,189,.34);border-bottom:1px solid rgba(175,255,189,.18);text-shadow:0 3px 18px rgba(0,36,15,.45)}.ai-welcome-eyebrow{justify-content:flex-start;margin:0 0 20px;color:#bfffc9;font-size:.75rem;letter-spacing:.2em}.ai-welcome h2{display:block;max-width:520px;margin:0;color:#fff;font-size:clamp(2.8rem,5.4vw,5.6rem);letter-spacing:-.052em;line-height:.92}.ai-welcome h2 span{display:block;color:#97f5a9;text-shadow:0 0 22px rgba(95,245,119,.64)}.ai-welcome-lead{display:block;max-width:430px;margin:21px 0 0;color:#e2fce5;font-size:clamp(.9rem,1.25vw,1.08rem);line-height:1.7}.ai-welcome-orb-side{position:relative;z-index:1;display:grid;justify-items:center;align-content:center;min-height:370px}.ai-orb-stage{width:292px;height:292px;margin:0;cursor:pointer}.ai-orb{width:220px;height:220px}.ai-welcome-orb-side:before{content:"NHI / AI ADMISSIONS";position:absolute;top:7%;left:50%;transform:translateX(-50%);padding:7px 13px;border:1px solid rgba(151,245,169,.34);background:rgba(2,45,21,.42);color:#b7ffbf;font-size:.62rem;font-weight:800;letter-spacing:.2em;white-space:nowrap}.ai-welcome-orb-side:after{content:"";position:absolute;width:390px;height:390px;border:1px solid rgba(146,244,160,.16);border-radius:50%;box-shadow:0 0 45px rgba(44,206,76,.18),inset 0 0 46px rgba(70,236,100,.1);pointer-events:none}.ai-welcome .ai-voice-wave{position:relative;z-index:2;width:235px;margin:-22px auto 13px;opacity:.3}.ai-welcome-status{position:relative;z-index:2;min-width:280px;padding:14px 17px;border:1px solid rgba(148,243,162,.3);background:linear-gradient(90deg,rgba(2,49,23,.78),rgba(10,93,42,.38));box-shadow:0 10px 30px rgba(0,38,17,.25);color:#dcffe0;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-align:center;text-transform:uppercase}.ai-welcome-status:before{content:"●";margin-right:8px;color:#81f698;text-shadow:0 0 11px #81f698}.ai-welcome-form,.ai-welcome-suggestions,.ai-welcome-note{display:none}.ai-welcome-skip{position:absolute;z-index:3;bottom:38px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:10px;margin:0;padding:10px 15px;border:1px solid rgba(211,255,217,.35);border-radius:0;background:rgba(5,55,27,.48);color:#f0fff1;font-size:.72rem;letter-spacing:.08em;text-decoration:none}.ai-welcome-skip:after{content:"↓";font-size:1rem;color:#9cffaa}.ai-welcome[data-voice-state="listening"] .ai-welcome-status{border-color:#9cf5aa;background:rgba(12,111,49,.65);box-shadow:0 0 30px rgba(79,236,108,.42)}.ai-welcome[data-voice-state="speaking"] .ai-welcome-status{border-color:#e1ff9c;background:rgba(26,106,40,.65)}.ai-welcome[data-voice-state="speaking"] .ai-welcome-eyebrow:after{display:none}@media(max-width:860px){.ai-welcome-card{grid-template-columns:1fr;gap:12px;align-content:center;min-height:680px;padding:105px 28px 78px}.ai-welcome-intro{max-width:540px;justify-self:center;text-align:center}.ai-welcome-eyebrow{justify-content:center;margin-bottom:14px}.ai-welcome h2{font-size:clamp(2.4rem,10vw,4.5rem)}.ai-welcome-lead{margin:15px auto 0}.ai-welcome-orb-side{min-height:310px}.ai-welcome-orb-side:before{top:0}.ai-welcome-orb-side:after{width:330px;height:330px}.ai-orb-stage{width:242px;height:242px}.ai-orb{width:186px;height:186px}.ai-welcome-skip{bottom:20px}}@media(max-width:520px){.ai-welcome-card{padding:88px 18px 65px;min-height:620px}.ai-welcome-intro{padding:14px 0 18px}.ai-welcome-eyebrow{font-size:.6rem}.ai-welcome h2{font-size:clamp(2.2rem,12vw,3.4rem)}.ai-welcome-lead{font-size:.82rem}.ai-welcome-orb-side{min-height:250px}.ai-welcome-orb-side:after{width:270px;height:270px}.ai-orb-stage{width:205px;height:205px}.ai-orb{width:156px;height:156px}.ai-welcome .ai-voice-wave{width:185px;margin-top:-21px}.ai-welcome-status{min-width:228px;font-size:.61rem}}
+    /* Match the portfolio composition: copy left, orb center, console right, status rail below. */
+    .ai-welcome{background:linear-gradient(90deg,rgba(1,20,10,.91),rgba(2,39,19,.78) 49%,rgba(1,18,9,.91));backdrop-filter:blur(2px)}.ai-welcome:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 35%,rgba(56,214,91,.2),transparent 34%),linear-gradient(90deg,transparent 0 49.9%,rgba(122,248,142,.08) 50%,transparent 50.1%);pointer-events:none}.ai-welcome-card{display:block;position:relative;width:min(1500px,100%);height:100%;min-height:650px;padding:0}.ai-welcome-intro{position:absolute;z-index:3;top:34%;left:clamp(42px,9vw,150px);width:min(45vw,610px);max-width:none;padding:20px 0 24px;text-align:left}.ai-welcome-eyebrow{justify-content:flex-start}.ai-welcome h2{max-width:600px;font-size:clamp(3.25rem,5.5vw,6.4rem)}.ai-welcome-lead{max-width:570px;font-size:clamp(.92rem,1.2vw,1.1rem)}.ai-welcome-orb-side{position:absolute;z-index:5;top:31%;left:51%;display:grid;min-height:0;transform:translate(-50%,-50%)}.ai-welcome-orb-side:before{top:auto;bottom:-55px}.ai-welcome-orb-side:after{width:360px;height:360px}.ai-orb-stage{width:270px;height:270px}.ai-orb{width:205px;height:205px}.ai-welcome .ai-voice-wave{position:absolute;top:274px;left:50%;width:220px;margin:0;transform:translateX(-50%)}.ai-welcome-console{position:absolute;z-index:3;top:45%;right:clamp(40px,8vw,140px);width:min(36vw,520px);height:220px;border:1px solid rgba(113,235,137,.32);border-radius:14px;background:linear-gradient(145deg,rgba(1,25,12,.82),rgba(3,45,20,.55));box-shadow:0 20px 50px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.04);overflow:hidden;color:#c9fbd1}.ai-console-head{display:flex;align-items:center;gap:7px;height:31px;padding:0 13px;border-bottom:1px solid rgba(113,235,137,.2);background:rgba(9,63,29,.48)}.ai-console-head i{width:7px;height:7px;border-radius:50%;background:#76ee8a;box-shadow:0 0 8px #76ee8a}.ai-console-head i:nth-child(2){background:#e9c95c;box-shadow:none}.ai-console-head i:nth-child(3){background:#3fa86a;box-shadow:none}.ai-console-head span{margin-left:7px;color:#7ebd8a;font:600 .6rem/1 monospace;letter-spacing:.08em}.ai-console-body{padding:18px 20px;font:600 .75rem/1.75 monospace}.ai-console-body p{margin:0;color:#8ce99d}.ai-console-body strong{display:block;margin-top:8px;color:#e4ffe7;font-size:.84rem;font-weight:600}.ai-console-cursor{display:inline-block;width:7px;height:13px;margin-left:5px;vertical-align:-2px;background:#76ee8a;animation:consoleBlink 1s steps(1) infinite}@keyframes consoleBlink{50%{opacity:0}}.ai-welcome-status{position:absolute;z-index:5;left:25%;right:25%;bottom:15%;min-width:0;padding:14px 18px;text-align:left}.ai-welcome-status:after{content:"VOICE LINK // GEMINI";position:absolute;right:16px;color:#8be99a;font:700 .58rem/1 monospace;letter-spacing:.12em}.ai-welcome-skip{left:clamp(42px,9vw,150px);bottom:8%;transform:none}.ai-welcome[data-voice-state="speaking"] .ai-welcome-status:after{content:"VOICE // GEMINI TTS / LEDA"}@media(max-width:900px){.ai-welcome-card{min-height:700px}.ai-welcome-intro{top:16%;left:7%;width:86%;text-align:center}.ai-welcome-eyebrow{justify-content:center}.ai-welcome h2{margin:auto;font-size:clamp(2.7rem,10vw,4.8rem)}.ai-welcome-lead{margin:15px auto 0}.ai-welcome-orb-side{top:53%;left:50%}.ai-welcome-console{display:none}.ai-welcome-status{left:12%;right:12%;bottom:12%;text-align:center}.ai-welcome-status:after{display:none}.ai-welcome-skip{left:50%;bottom:4%;transform:translateX(-50%)}}@media(max-width:520px){.ai-welcome-intro{top:12%;padding:13px 0}.ai-welcome h2{font-size:clamp(2.35rem,12vw,3.4rem)}.ai-welcome-lead{font-size:.8rem}.ai-welcome-orb-side{top:52%}.ai-orb-stage{width:215px;height:215px}.ai-orb{width:162px;height:162px}.ai-welcome-orb-side:after{width:275px;height:275px}.ai-welcome .ai-voice-wave{top:220px;width:180px}.ai-welcome-status{left:7%;right:7%;bottom:13%;font-size:.62rem;text-align:center}}
   </style>
 </head>
 <body>
@@ -150,7 +152,7 @@
 
   <button class="scroll-top" id="scrollTop" aria-label="Lên đầu trang">↑</button>
   <div class="floating-social"><a class="social-float" href="#" aria-label="Facebook"><img src="mtpc-assets/facebook-f-logo.webp" alt="Facebook"></a><a class="social-float" href="https://zalo.me/0375711766" aria-label="Zalo"><img src="mtpc-assets/Icon_of_Zalo.svg.webp" alt="Zalo"></a></div>
-  <section class="ai-welcome" id="aiWelcome" aria-label="Chào mừng từ trợ lý tuyển sinh Nhi"><div class="ai-welcome-card"><div class="ai-welcome-intro"><p class="ai-welcome-eyebrow"><i></i>MTPC SYSTEM // ONLINE</p><h2>Chào bạn,<br><span>mình là Nhi.</span></h2><p class="ai-welcome-lead">Trợ lý tuyển sinh AI của Trường Trung cấp Miền Tây. Mình sẵn sàng đồng hành cùng bạn.</p></div><div class="ai-welcome-orb-side"><div class="ai-orb-stage" aria-hidden="true"><div class="ai-orb"><span class="ai-orb-mark">N</span></div></div><div class="ai-welcome-status" id="aiWelcomeStatus">Nhi đang sẵn sàng</div></div><form class="ai-welcome-form" id="aiWelcomeForm"><input id="aiWelcomeInput" autocomplete="off" placeholder="Nhập câu hỏi hoặc nói với Nhi..."><button class="ai-welcome-send" type="submit" aria-label="Gửi câu hỏi cho Nhi">➜</button></form><div class="ai-welcome-suggestions"><button type="button" data-ai-question="MTPC có những ngành nào?">Ngành học</button></div><button class="ai-welcome-skip" id="aiWelcomeSkip" type="button">Khám phá website</button><p class="ai-welcome-note"><span>●</span> Nhi sẽ đồng hành cùng bạn trong lúc xem trang</p></div></section>
+  <section class="ai-welcome" id="aiWelcome" aria-label="Chào mừng từ trợ lý tuyển sinh Nhi"><div class="ai-welcome-card"><div class="ai-welcome-intro"><p class="ai-welcome-eyebrow"><i></i>GEMINI 3.1 FLASH LIVE // ONLINE</p><h2>Chào bạn,<br><span>mình là Nhi.</span></h2><p class="ai-welcome-lead">Trợ lý tuyển sinh AI của Trường Trung cấp Miền Tây. Mình sẵn sàng đồng hành cùng bạn.</p></div><div class="ai-welcome-orb-side"><div class="ai-orb-stage" aria-hidden="true"><div class="ai-orb"><span class="ai-orb-mark">N</span></div></div></div><div class="ai-welcome-console" aria-hidden="true"><div class="ai-console-head"><i></i><i></i><i></i><span>nhi@mtpc: ~/admissions</span></div><div class="ai-console-body"><p>nhi@mtpc:~$ model</p><strong>gemini-3.1-flash-live-preview</strong><p>nhi@mtpc:~$ voice-status</p><strong>Native audio link online<span class="ai-console-cursor"></span></strong></div></div><div class="ai-welcome-status" id="aiWelcomeStatus">NHI ĐANG KẾT NỐI LIVE</div><form class="ai-welcome-form" id="aiWelcomeForm"><input id="aiWelcomeInput" autocomplete="off" placeholder="Nhập câu hỏi hoặc nói với Nhi..."><button class="ai-welcome-send" type="submit" aria-label="Gửi câu hỏi cho Nhi">➜</button></form><div class="ai-welcome-suggestions"><button type="button" data-ai-question="MTPC có những ngành nào?">Ngành học</button></div><button class="ai-welcome-skip" id="aiWelcomeSkip" type="button">Khám phá website</button><p class="ai-welcome-note"><span>●</span> Nhi sẽ đồng hành cùng bạn trong lúc xem trang</p></div></section>
 
   <aside class="chat-window" id="chatWindow" aria-label="Trợ lý tuyển sinh Nhi"><div class="chat-header"><div class="chat-head-info"><div class="chat-avatar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73C10.4 5.39 10 4.74 10 4a2 2 0 0 1 2-2m-4.5 11A2.5 2.5 0 1 0 10 15.5 2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 1 0 2.5 2.5 2.5 2.5 0 0 0-2.5-2.5Z"/></svg></div><div><h3>Nhi — Trợ lý tuyển sinh MTPC</h3><p><span class="online-dot"></span>Nhi đang trực</p></div></div><div class="chat-head-actions"><button id="soundBtn" aria-label="Bật tắt âm thanh">🔊</button><button id="closeChat" aria-label="Đóng chat">✕</button></div></div><div class="chat-body" id="chatBody"><div class="chat-message bot"><div class="message-content">Xin chào! 👋 Mình là Nhi, trợ lý tư vấn tuyển sinh của Trường Trung cấp Miền Tây. Bạn quan tâm ngành nào ạ?</div><span class="message-time">Bây giờ</span></div></div><form class="chat-footer" id="chatForm"><div class="chat-input-wrap"><input class="chat-input" id="chatInput" placeholder="Nhập câu hỏi..." autocomplete="off"><button class="chat-send" id="chatSend" type="submit" aria-label="Gửi"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button></div></form></aside>
   <button class="chat-bubble nhi-orb" id="chatBubble" aria-label="Mở trò chuyện với Nhi"><span class="nhi-orb-label"><strong>Nhi</strong><small>Tư vấn tuyển sinh</small></span><span class="nhi-orb-rings" aria-hidden="true"></span><span class="nhi-orb-core" aria-hidden="true"><span class="nhi-orb-letter">N</span><span class="nhi-orb-spark">✦</span></span><span class="nhi-orb-close" aria-hidden="true">×</span></button>
@@ -187,6 +189,7 @@
   </script>
   <script>
     (function(){
+      return; // Replaced by the Gemini 3.1 Flash Live client below.
       var welcome=document.getElementById('aiWelcome'),stage=document.querySelector('.ai-orb-stage'),status=welcome.querySelector('.ai-welcome-eyebrow'),statusPanel=document.getElementById('aiWelcomeStatus'),skip=document.getElementById('aiWelcomeSkip'),bars=[],waveBars=[],history=[],recognition=null,stream=null,context=null,analyser=null,frame=null,listening=false,welcomeSpoken=false,audioContext=null,activeAudio=null,pendingGreeting=null,ignoreOrbClick=false;
       if(!welcome||!stage)return;
       var legacyChat=document.getElementById('chatForm');if(legacyChat&&legacyChat.parentNode)legacyChat.parentNode.replaceChild(legacyChat.cloneNode(true),legacyChat);
@@ -203,6 +206,207 @@
       function playPendingGreeting(){if(!pendingGreeting)return false;var greeting=pendingGreeting;pendingGreeting=null;ignoreOrbClick=true;window.setTimeout(function(){ignoreOrbClick=false;},0);playGeminiPcm(greeting).catch(function(){setStatus('NHI // CHẠM ORB ĐỂ NGHE','idle');});return true;}
       function activateOrb(){if(ignoreOrbClick)return;if(playPendingGreeting())return;beginVoice();}
       document.addEventListener('pointerdown',function(){if(!welcome.classList.contains('is-hidden'))playPendingGreeting();},{once:true,capture:true});stage.addEventListener('click',activateOrb);stage.addEventListener('keydown',function(event){if(event.key==='Enter'||event.key===' '){event.preventDefault();activateOrb();}});skip.addEventListener('click',function(){stopMeter();stopGeminiAudio();welcome.classList.add('is-hidden');});window.setTimeout(welcomeGreeting,450);
+    })();
+  </script>
+  <script>
+    (function(){
+      var MODEL='gemini-3.1-flash-live-preview';
+      var TOKEN_ENDPOINT='/api/live-token.php';
+      var LIVE_ENDPOINT='wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained';
+      var SYSTEM_INSTRUCTION='Bạn là Nhi, trợ lý tuyển sinh AI của Trường Trung cấp Miền Tây (MTPC) tại Cần Thơ. Luôn trò chuyện bằng tiếng Việt tự nhiên, thân thiện, ngắn gọn và dùng giọng nữ trẻ trung. Tư vấn về ngành học, tuyển sinh, học phí và hướng nghiệp. Thông tin chắc chắn: trường đào tạo theo hướng thực hành; địa chỉ 192-194 Ngô Quyền, phường An Hòa, quận Ninh Kiều, TP Cần Thơ; hotline và Zalo tuyển sinh 0375 711 766. Nếu chưa chắc dữ liệu, hãy nói rõ và hướng người dùng đến website chính thức hoặc hotline, không tự bịa thông tin.';
+      var welcome=document.getElementById('aiWelcome');
+      var stage=document.querySelector('.ai-orb-stage');
+      var status=document.querySelector('.ai-welcome-eyebrow');
+      var statusPanel=document.getElementById('aiWelcomeStatus');
+      var skip=document.getElementById('aiWelcomeSkip');
+      if(!welcome||!stage||!status||!skip)return;
+
+      var socket=null,setupReady=false,connectPromise=null,greetingSent=false,greetingPending=false;
+      var audioContext=null,micStream=null,micSource=null,micProcessor=null,silentGain=null,analyser=null,meterFrame=0;
+      var playbackCursor=0,playbackSources=[],waveBars=[],eqBars=[];
+
+      var legacyChat=document.getElementById('chatForm');
+      if(legacyChat&&legacyChat.parentNode)legacyChat.parentNode.replaceChild(legacyChat.cloneNode(true),legacyChat);
+      var oldWave=welcome.querySelector('.ai-voice-wave');
+      if(oldWave)oldWave.parentNode.removeChild(oldWave);
+      var waveform=document.createElement('div');
+      waveform.className='ai-voice-wave';
+      for(var w=0;w<27;w++)waveform.appendChild(document.createElement('i'));
+      stage.insertAdjacentElement('afterend',waveform);
+      waveBars=Array.prototype.slice.call(waveform.children);
+      eqBars=Array.prototype.slice.call(stage.querySelectorAll('.ai-eq-bar'));
+      stage.removeAttribute('aria-hidden');
+      stage.tabIndex=0;
+      stage.setAttribute('role','button');
+      stage.setAttribute('aria-label','Kết nối trực tiếp với Nhi bằng Gemini Live');
+
+      function setStatus(text,state){
+        welcome.dataset.voiceState=state||'idle';
+        status.innerHTML='<i></i>GEMINI 3.1 FLASH LIVE // '+(state==='listening'?'LISTENING':state==='speaking'?'SPEAKING':state==='thinking'?'CONNECTING':'ONLINE');
+        if(statusPanel)statusPanel.textContent=text;
+      }
+      function ensureAudioContext(){
+        if(!audioContext||audioContext.state==='closed')audioContext=new (window.AudioContext||window.webkitAudioContext)();
+        return audioContext;
+      }
+      function base64ToInt16(value){
+        var binary=atob(value),bytes=new Uint8Array(binary.length);
+        for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+        return new Int16Array(bytes.buffer);
+      }
+      function arrayBufferToBase64(buffer){
+        var bytes=new Uint8Array(buffer),binary='',chunk=8192;
+        for(var i=0;i<bytes.length;i+=chunk)binary+=String.fromCharCode.apply(null,bytes.subarray(i,Math.min(i+chunk,bytes.length)));
+        return btoa(binary);
+      }
+      function downsampleToPcm16(samples,inputRate){
+        var targetRate=16000,ratio=inputRate/targetRate,length=Math.max(1,Math.floor(samples.length/ratio)),result=new Int16Array(length);
+        for(var i=0;i<length;i++){
+          var start=Math.floor(i*ratio),end=Math.min(samples.length,Math.floor((i+1)*ratio)),sum=0,count=0;
+          for(var j=start;j<end;j++){sum+=samples[j];count++;}
+          var sample=Math.max(-1,Math.min(1,count?sum/count:0));
+          result[i]=sample<0?sample*32768:sample*32767;
+        }
+        return result;
+      }
+      function playLiveAudio(base64){
+        if(!base64)return;
+        var context=ensureAudioContext(),pcm=base64ToInt16(base64),floats=new Float32Array(pcm.length);
+        for(var i=0;i<pcm.length;i++)floats[i]=pcm[i]/32768;
+        var buffer=context.createBuffer(1,floats.length,24000);
+        buffer.copyToChannel(floats,0);
+        var source=context.createBufferSource();
+        source.buffer=buffer;
+        source.connect(context.destination);
+        var startAt=Math.max(context.currentTime+.025,playbackCursor);
+        playbackCursor=startAt+buffer.duration;
+        playbackSources.push(source);
+        source.onended=function(){
+          var index=playbackSources.indexOf(source);
+          if(index>-1)playbackSources.splice(index,1);
+          if(!playbackSources.length&&!greetingPending)setStatus(micStream?'NHI ĐANG LẮNG NGHE':'CHẠM ORB ĐỂ TRÒ CHUYỆN','idle');
+        };
+        setStatus('NHI ĐANG TRẢ LỜI BẰNG GIỌNG GEMINI LIVE','speaking');
+        source.start(startAt);
+        context.resume().catch(function(){});
+      }
+      function updateMeter(){
+        if(!analyser)return;
+        var data=new Uint8Array(analyser.fftSize),sum=0;
+        analyser.getByteTimeDomainData(data);
+        for(var i=0;i<data.length;i++){var value=(data[i]-128)/128;sum+=value*value;}
+        var level=Math.min(.98,Math.sqrt(sum/data.length)*5.4),time=Date.now()/110;
+        stage.style.setProperty('--voice-level',level.toFixed(3));
+        eqBars.forEach(function(bar,index){bar.style.setProperty('--bar-level',(.25+level*(.55+Math.abs(3-index)*.1)).toFixed(2));});
+        waveBars.forEach(function(bar,index){var shape=Math.sin(index/(waveBars.length-1)*Math.PI),motion=.5+.5*Math.sin(time+index*.67);bar.style.setProperty('--voice-wave',(.2+shape*(.3+level*2.6)*motion).toFixed(2));});
+        meterFrame=requestAnimationFrame(updateMeter);
+      }
+      function stopMicrophone(){
+        if(meterFrame)cancelAnimationFrame(meterFrame);
+        meterFrame=0;
+        if(micProcessor){micProcessor.onaudioprocess=null;micProcessor.disconnect();}
+        if(micSource)micSource.disconnect();
+        if(silentGain)silentGain.disconnect();
+        if(micStream)micStream.getTracks().forEach(function(track){track.stop();});
+        micProcessor=micSource=silentGain=analyser=micStream=null;
+      }
+      function startMicrophone(){
+        if(micStream)return Promise.resolve();
+        if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return Promise.reject(new Error('Microphone unavailable'));
+        setStatus('ĐANG XIN QUYỀN MICROPHONE','thinking');
+        return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}}).then(function(stream){
+          micStream=stream;
+          var context=ensureAudioContext();
+          return context.resume().then(function(){
+            analyser=context.createAnalyser();
+            analyser.fftSize=128;
+            analyser.smoothingTimeConstant=.72;
+            micSource=context.createMediaStreamSource(stream);
+            micProcessor=context.createScriptProcessor(2048,1,1);
+            silentGain=context.createGain();
+            silentGain.gain.value=0;
+            micSource.connect(analyser);
+            micSource.connect(micProcessor);
+            micProcessor.connect(silentGain);
+            silentGain.connect(context.destination);
+            micProcessor.onaudioprocess=function(event){
+              if(!setupReady||!socket||socket.readyState!==WebSocket.OPEN)return;
+              var pcm=downsampleToPcm16(event.inputBuffer.getChannelData(0),context.sampleRate);
+              socket.send(JSON.stringify({realtimeInput:{audio:{data:arrayBufferToBase64(pcm.buffer),mimeType:'audio/pcm;rate=16000'}}}));
+            };
+            updateMeter();
+            setStatus('NHI ĐANG LẮNG NGHE','listening');
+          });
+        });
+      }
+      function readSocketData(data,callback){
+        if(typeof data==='string'){callback(data);return;}
+        if(typeof Blob!=='undefined'&&data instanceof Blob){var reader=new FileReader();reader.onload=function(){callback(String(reader.result||''));};reader.readAsText(data);return;}
+        if(data instanceof ArrayBuffer){callback(new TextDecoder().decode(data));return;}
+        callback('');
+      }
+      function handleServerMessage(message){
+        if(message.error){setStatus('GEMINI LIVE ĐANG BẬN — THỬ LẠI','idle');return;}
+        var content=message.serverContent;
+        if(!content)return;
+        if(content.interrupted){playbackSources.forEach(function(source){try{source.stop();}catch(error){}});playbackSources=[];playbackCursor=0;}
+        var parts=content.modelTurn&&content.modelTurn.parts?content.modelTurn.parts:[];
+        for(var i=0;i<parts.length;i++)if(parts[i].inlineData&&parts[i].inlineData.data)playLiveAudio(parts[i].inlineData.data);
+        if(content.turnComplete){greetingPending=false;if(!playbackSources.length)setStatus(micStream?'NHI ĐANG LẮNG NGHE':'CHẠM ORB ĐỂ TRÒ CHUYỆN',micStream?'listening':'idle');}
+      }
+      function sendLiveText(text){
+        if(!setupReady||!socket||socket.readyState!==WebSocket.OPEN)return false;
+        socket.send(JSON.stringify({realtimeInput:{text:text}}));
+        return true;
+      }
+      function connectLive(startMic,sendGreeting){
+        if(setupReady&&socket&&socket.readyState===WebSocket.OPEN){
+          return startMic?startMicrophone():Promise.resolve(true);
+        }
+        if(connectPromise)return connectPromise.then(function(){return startMic?startMicrophone():true;});
+        setStatus('ĐANG KẾT NỐI GEMINI 3.1 FLASH LIVE','thinking');
+        connectPromise=fetch(TOKEN_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'}}).then(function(response){return response.json().then(function(data){if(!response.ok||!data.token)throw new Error(data.error||'Live token unavailable');return data;});}).then(function(tokenPayload){
+          return new Promise(function(resolve,reject){
+            var done=false,timer=setTimeout(function(){if(!done)reject(new Error('Live setup timeout'));},15000);
+            socket=new WebSocket(LIVE_ENDPOINT+'?access_token='+encodeURIComponent(tokenPayload.token));
+            socket.addEventListener('open',function(){
+              socket.send(JSON.stringify({setup:{model:'models/'+(tokenPayload.model||MODEL),generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:'Leda'}}}},inputAudioTranscription:{},outputAudioTranscription:{},sessionResumption:{},systemInstruction:{parts:[{text:SYSTEM_INSTRUCTION}]}}}));
+            });
+            socket.addEventListener('message',function(event){readSocketData(event.data,function(raw){var message;try{message=JSON.parse(raw);}catch(error){return;}if(message.setupComplete&&!done){done=true;clearTimeout(timer);setupReady=true;resolve(true);}handleServerMessage(message);});});
+            socket.addEventListener('error',function(){if(!done){done=true;clearTimeout(timer);reject(new Error('Gemini Live socket error'));}});
+            socket.addEventListener('close',function(){setupReady=false;socket=null;if(!welcome.classList.contains('is-hidden'))setStatus('KẾT NỐI LIVE ĐÃ ĐÓNG — CHẠM ĐỂ THỬ LẠI','idle');});
+          });
+        }).then(function(){
+          if(sendGreeting&&!greetingSent){
+            greetingSent=true;
+            greetingPending=true;
+            sendLiveText('Hãy nói đúng một câu chào ngắn bằng tiếng Việt: Chào mừng bạn đến với Trường Trung cấp Miền Tây. Mình là Nhi, rất vui được đồng hành cùng bạn.');
+          }
+          return startMic?startMicrophone():true;
+        }).catch(function(error){setStatus('KHÔNG THỂ KẾT NỐI GEMINI LIVE','idle');throw error;}).then(function(value){connectPromise=null;return value;},function(error){connectPromise=null;throw error;});
+        return connectPromise;
+      }
+      function activateOrb(){
+        var context=ensureAudioContext();
+        context.resume().catch(function(){});
+        if(greetingPending||playbackSources.length)return;
+        connectLive(true,false).catch(function(){setStatus('CHẠM LẠI ĐỂ KẾT NỐI','idle');});
+      }
+      function shutdown(){
+        stopMicrophone();
+        playbackSources.forEach(function(source){try{source.stop();}catch(error){}});
+        playbackSources=[];
+        if(socket&&(socket.readyState===WebSocket.OPEN||socket.readyState===WebSocket.CONNECTING))socket.close();
+        socket=null;setupReady=false;
+        if(audioContext&&audioContext.state!=='closed')audioContext.close();
+        audioContext=null;
+      }
+
+      document.addEventListener('pointerdown',function(){try{ensureAudioContext().resume();}catch(error){}},{once:true,capture:true});
+      stage.addEventListener('click',activateOrb);
+      stage.addEventListener('keydown',function(event){if(event.key==='Enter'||event.key===' '){event.preventDefault();activateOrb();}});
+      skip.addEventListener('click',function(){shutdown();welcome.classList.add('is-hidden');});
+      window.setTimeout(function(){connectLive(false,true).catch(function(){});},650);
     })();
   </script>
 </body>
