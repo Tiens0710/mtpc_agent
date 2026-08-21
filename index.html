@@ -79,6 +79,48 @@
     /* Reopen control: a small floating orb appears only after the welcome layer is dismissed. */
     .ai-reopen{position:fixed;right:28px;bottom:28px;z-index:1290;display:grid;place-items:center;width:58px;height:58px;padding:0;border:1px solid rgba(209,255,216,.56);border-radius:50%;background:radial-gradient(circle at 34% 27%,#f2fff4 0 6%,#b6ffc1 12%,#43cf6a 31%,#0c7038 66%,#04341d 100%);box-shadow:0 8px 25px rgba(0,65,27,.28),0 0 0 7px rgba(92,226,113,.1),0 0 34px rgba(66,211,96,.36);cursor:pointer;opacity:0;visibility:hidden;pointer-events:none;transform:scale(.72);transition:opacity .25s ease,visibility .25s ease,transform .25s ease}.ai-reopen:before{content:"";position:absolute;inset:-9px;border:1px solid rgba(139,247,157,.34);border-radius:50%;animation:mtpcReopenPulse 2.6s ease-in-out infinite}.ai-reopen:after{content:"";position:absolute;inset:12px;border:1px solid rgba(239,255,241,.62);border-radius:50%;box-shadow:0 0 11px rgba(255,255,255,.42)}.ai-reopen-core{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:2px;width:20px;height:22px}.ai-reopen-core i{display:block;width:2px;height:8px;border-radius:3px;background:#ecffef;box-shadow:0 0 7px rgba(236,255,239,.9);animation:mtpcReopenBars 1.2s ease-in-out infinite}.ai-reopen-core i:nth-child(2){height:14px;animation-delay:-.2s}.ai-reopen-core i:nth-child(3){height:19px;animation-delay:-.4s}.ai-reopen-core i:nth-child(4){height:11px;animation-delay:-.6s}.ai-welcome:not(.is-hidden)~.ai-reopen{opacity:0;visibility:hidden;pointer-events:none;transform:scale(.72)}.ai-welcome.is-hidden~.ai-reopen{opacity:1;visibility:visible;pointer-events:auto;transform:scale(1)}.ai-reopen:hover{transform:scale(1.06)}@keyframes mtpcReopenPulse{0%,100%{opacity:.24;transform:scale(.9)}50%{opacity:.72;transform:scale(1.1)}}@keyframes mtpcReopenBars{0%,100%{transform:scaleY(.55);opacity:.6}50%{transform:scaleY(1.15);opacity:1}}@media(max-width:600px){.ai-reopen{right:18px;bottom:18px;width:52px;height:52px}}
   </style>
+  <style id="mtpc-orb-v3">
+    /* V3: a soft plasma orb instead of a flat circular disc. */
+    .ai-orb{isolation:isolate;overflow:visible;transform-style:preserve-3d;filter:drop-shadow(0 20px 34px rgba(0,44,19,.32))}
+    .ai-orb:before{content:"";display:block;position:absolute;z-index:0;inset:9% 7%;border-radius:53% 47% 40% 60% / 44% 54% 46% 56%;background:conic-gradient(from 210deg at 50% 50%,rgba(5,54,29,.85),rgba(35,220,108,.64),rgba(145,255,157,.25),rgba(7,83,43,.92),rgba(5,54,29,.85));filter:blur(24px);opacity:.62;transform:rotate(16deg) scale(1.08);animation:mtpcPlasmaAura 6.5s ease-in-out infinite}
+    .ai-orb:after{content:"";display:block;position:absolute;z-index:1;inset:4%;border-radius:49% 51% 57% 43% / 52% 41% 59% 48%;background:repeating-linear-gradient(112deg,transparent 0 11px,rgba(197,255,207,.05) 12px,transparent 13px 25px);mix-blend-mode:screen;opacity:.45;mask-image:radial-gradient(ellipse at center,#000 0 45%,transparent 76%);pointer-events:none;animation:mtpcOrbSheen 8s linear infinite}
+    .ai-orb-field{z-index:2;inset:8%;overflow:hidden;border:0;border-radius:43% 57% 62% 38% / 50% 39% 61% 50%;background:radial-gradient(ellipse at 29% 20%,rgba(239,255,241,.74) 0 3%,rgba(145,255,160,.3) 13%,transparent 28%),radial-gradient(ellipse at 76% 76%,rgba(27,203,88,.9) 0 7%,transparent 36%),radial-gradient(ellipse at 52% 52%,rgba(20,116,56,.7) 0 24%,transparent 62%),conic-gradient(from 192deg at 50% 50%,#032718,#0a6838 23%,#26d878 41%,#0b5430 62%,#032c19 84%,#087741);box-shadow:none;filter:saturate(1.08);-webkit-mask-image:radial-gradient(ellipse at center,#000 0 52%,rgba(0,0,0,.86) 64%,transparent 80%);mask-image:radial-gradient(ellipse at center,#000 0 52%,rgba(0,0,0,.86) 64%,transparent 80%);animation:mtpcPlasmaFloat 5.8s ease-in-out infinite}
+    .ai-orb-field:before{content:"";position:absolute;inset:6%;border:1px solid rgba(208,255,215,.2);border-radius:inherit;box-shadow:inset 12px 11px 22px rgba(221,255,226,.1),inset -18px -20px 30px rgba(0,21,11,.5);transform:rotate(13deg) scale(.93);pointer-events:none}
+    .ai-orb-field:after{content:"";position:absolute;inset:-2%;border-radius:inherit;background:radial-gradient(ellipse at 31% 20%,rgba(255,255,255,.28),transparent 18%),radial-gradient(ellipse at 67% 73%,transparent 33%,rgba(111,245,134,.12) 64%,transparent 74%),repeating-conic-gradient(from 10deg,rgba(206,255,216,.05) 0 1deg,transparent 1deg 8deg);mix-blend-mode:screen;opacity:.72;pointer-events:none;animation:mtpcOrbSheen 10s linear infinite reverse}
+    .ai-orb-blob{z-index:1;opacity:.58;filter:blur(22px);mix-blend-mode:screen}
+    .ai-orb-blob:nth-child(1){top:-18%;left:5%;background:radial-gradient(ellipse,rgba(236,255,238,.9),transparent 68%);animation-duration:7.4s}
+    .ai-orb-blob:nth-child(2){right:-21%;bottom:-12%;background:radial-gradient(ellipse,rgba(34,222,101,.86),transparent 68%);animation-duration:9.5s}
+    .ai-orb-blob:nth-child(3){bottom:-26%;left:-16%;background:radial-gradient(ellipse,rgba(211,248,92,.32),transparent 67%);animation-duration:8.4s}
+    .ai-orb-rings{z-index:4;inset:-18%;transform:rotate(-17deg);opacity:.75}
+    .ai-orb-ring{inset:0!important;border:1px solid transparent;border-top-color:rgba(211,255,219,.74);border-right-color:rgba(110,242,137,.42);border-bottom-color:transparent;border-left-color:transparent;border-radius:50%;opacity:.62;transform:scaleX(.68) rotate(18deg);animation:mtpcOrbitArc 8s linear infinite}
+    .ai-orb-ring:nth-child(2){inset:7%!important;border-top-color:rgba(54,224,111,.55);border-right-color:rgba(194,255,204,.28);transform:scaleX(.54) rotate(112deg);animation-duration:11s;animation-direction:reverse}
+    .ai-orb-ring:nth-child(3){display:block!important;inset:18%!important;border-style:dashed;border-top-color:rgba(197,255,207,.25);border-right-color:transparent;transform:scaleX(.82) rotate(222deg);animation-duration:14s}
+    .ai-orb-particles{z-index:5;inset:-18%;opacity:.8;animation-duration:18s}
+    .ai-orb-particle{border-top-color:rgba(229,255,232,.88);border-bottom-color:rgba(71,232,116,.12);filter:drop-shadow(0 0 6px rgba(151,255,165,.72));transform:rotate(var(--angle)) scaleY(.46)}
+    .ai-orb-particle:nth-child(2){display:block!important;inset:2% 16%;border-top-color:rgba(99,240,139,.7);border-bottom-color:rgba(99,240,139,.12);transform:rotate(var(--angle)) scaleY(.7)}
+    .ai-orb-particle:nth-child(3){display:block!important;inset:20% -3%;border-top-color:rgba(219,255,121,.44);border-left-color:rgba(219,255,121,.2);transform:rotate(var(--angle)) scaleY(.34)}
+    .ai-orb-particle:after{width:19px;height:2px;opacity:.9}
+    .ai-orb-core{z-index:7;inset:35%;border:1px solid rgba(241,255,243,.86);background:radial-gradient(circle at 31% 24%,#fff 0 7%,#d8ffe0 15%,#77ee91 32%,#0a7a3a 62%,#021e11 100%);box-shadow:0 0 16px rgba(255,255,255,.9),0 0 36px rgba(110,250,139,.9),inset -8px -10px 18px rgba(0,27,13,.82);animation:mtpcCore 3s ease-in-out infinite}
+    .ai-orb-core:after{inset:30%;border:1px solid rgba(255,255,255,.92);box-shadow:0 0 12px rgba(255,255,255,.88)}
+    .ai-orb-eq{z-index:8;gap:2px;opacity:.2}
+    .ai-eq-bar{width:2px;box-shadow:0 0 7px rgba(190,255,199,.88)}
+    .ai-welcome[data-voice-state="listening"] .ai-orb{transform:scale(calc(1 + var(--voice-level) * .055))}
+    .ai-welcome[data-voice-state="listening"] .ai-orb-field{animation:none;transform:rotate(-3deg) scale(calc(1 + var(--voice-level) * .13));filter:saturate(calc(1.08 + var(--voice-level) * .7)) brightness(calc(1 + var(--voice-level) * .12));box-shadow:none}
+    .ai-welcome[data-voice-state="listening"] .ai-orb:before{animation:mtpcPlasmaAura .9s ease-in-out infinite;opacity:calc(.62 + var(--voice-level) * .36)}
+    .ai-welcome[data-voice-state="listening"] .ai-orb-ring{animation:mtpcVoiceSonar 1.75s ease-out infinite;opacity:calc(.3 + var(--voice-level) * .7)}
+    .ai-welcome[data-voice-state="speaking"] .ai-orb-field{animation:mtpcPlasmaSpeak .72s ease-in-out infinite;filter:brightness(1.08) saturate(1.25)}
+    .ai-welcome[data-voice-state="speaking"] .ai-orb-ring{animation:mtpcVoiceSonar 1.4s ease-out infinite;opacity:.86}
+    .ai-reopen{border:0;background:transparent;box-shadow:none;filter:drop-shadow(0 8px 14px rgba(0,59,24,.3))}
+    .ai-reopen:before{inset:1px;border:0;border-radius:48% 52% 60% 40% / 45% 38% 62% 55%;background:radial-gradient(circle at 31% 22%,#ecffef 0 5%,#9dffac 13%,#35cf68 32%,#086d36 64%,#021f11 100%);box-shadow:0 0 20px rgba(80,231,112,.66);animation:mtpcReopenMorph 4.2s ease-in-out infinite}
+    .ai-reopen:after{inset:13px;border:1px solid rgba(229,255,233,.68);border-radius:46% 54% 56% 44% / 53% 41% 59% 47%;background:radial-gradient(circle at 35% 26%,rgba(255,255,255,.9),transparent 18%),transparent;box-shadow:0 0 12px rgba(230,255,234,.58);transform:rotate(-16deg)}
+    @keyframes mtpcPlasmaAura{0%,100%{transform:rotate(16deg) scale(1.02);filter:blur(24px)}50%{transform:rotate(-12deg) scale(1.13);filter:blur(29px)}}
+    @keyframes mtpcPlasmaFloat{0%,100%{transform:rotate(-3deg) translate3d(0,0,0) scale(.98)}50%{transform:rotate(8deg) translate3d(3px,-4px,0) scale(1.045)}}
+    @keyframes mtpcPlasmaSpeak{0%,100%{transform:rotate(-5deg) scale(.98)}50%{transform:rotate(9deg) scale(1.1)}}
+    @keyframes mtpcOrbSheen{to{transform:rotate(360deg)}}
+    @keyframes mtpcOrbitArc{to{transform:scaleX(.68) rotate(378deg)}}
+    @keyframes mtpcReopenMorph{0%,100%{transform:rotate(0) scale(.96)}50%{transform:rotate(9deg) scale(1.08)}}
+    @media(max-width:600px){.ai-orb{width:150px;height:150px}.ai-orb-stage{width:194px;height:194px}.ai-orb-rings{inset:-15%}.ai-reopen{right:18px;bottom:18px}}
+  </style>
 </head>
 <body>
   <header class="header-modern" id="siteHeader">
