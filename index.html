@@ -168,6 +168,10 @@
     .ai-live-transcript{position:fixed;z-index:1312;top:52vh;left:50%;display:flex;width:min(520px,calc(100% - 32px));max-height:25vh;flex-direction:column;gap:8px;overflow:auto;padding:6px 3px 12px;transform:translateX(-50%);pointer-events:auto;scrollbar-width:thin;scrollbar-color:rgba(185,255,196,.42) transparent}.ai-live-message{display:flex;max-width:82%;flex-direction:column;align-self:flex-start;padding:9px 12px;border:1px solid rgba(206,255,214,.22);border-radius:14px 14px 14px 4px;background:rgba(4,62,29,.58);box-shadow:0 8px 24px rgba(0,32,15,.18),inset 0 1px 0 rgba(255,255,255,.1);backdrop-filter:blur(12px);color:#effff1;font-size:.78rem;line-height:1.45;text-align:left}.ai-live-message.user{align-self:flex-end;border-color:rgba(197,255,207,.32);border-radius:14px 14px 4px 14px;background:rgba(30,111,57,.62)}.ai-live-message-role{margin-bottom:3px;color:#a9f5b3;font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.ai-live-message-text{white-space:pre-wrap}.ai-live-message.is-draft{opacity:.82}@media(max-width:600px){.ai-live-transcript{top:43vh;width:calc(100% - 24px);max-height:29vh}.ai-live-message{max-width:88%;font-size:.72rem}.chat-launch{bottom:14px}}
     .ai-live-text-form{position:fixed;top:79vh;left:50%;z-index:1313;display:flex;width:min(520px,calc(100% - 32px));gap:7px;padding:6px 6px 6px 14px;border:1px solid rgba(209,255,217,.38);border-radius:999px;background:rgba(3,49,23,.62);box-shadow:0 8px 26px rgba(0,31,14,.2),inset 0 1px 0 rgba(255,255,255,.1);backdrop-filter:blur(14px);transform:translateX(-50%)}.ai-live-text-input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:#f3fff4;font:500 .78rem/1.2 inherit}.ai-live-text-input::placeholder{color:rgba(220,255,226,.62)}.ai-live-text-send{display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:50%;background:#b5f5bd;color:#0a5a2c;font-size:.95rem;font-weight:900;cursor:pointer;transition:transform .2s ease,background .2s ease}.ai-live-text-send:hover{background:#d9ffde;transform:scale(1.05)}@media(max-width:600px){.ai-live-text-form{top:74vh;width:calc(100% - 24px)}.ai-live-text-input{font-size:.72rem}}
   </style>
+  <style id="mtpc-live-chat-toggle">
+    .ai-live-text-form{opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,8px);transition:opacity .2s ease,visibility .2s ease,transform .2s ease}
+    .ai-live-text-form.is-open{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%)}
+  </style>
 </head>
 <body>
   <header class="header-modern" id="siteHeader">
@@ -284,9 +288,11 @@
   </script>
   <script>
     (function(){
-      var launch=document.getElementById('chatLaunch'),welcome=document.getElementById('aiWelcome'),reopen=document.getElementById('aiReopen');
-      if(!launch||!welcome)return;
-      launch.addEventListener('click',function(event){event.preventDefault();event.stopPropagation();if(reopen)reopen.click();else welcome.classList.remove('is-hidden');});
+      var launch=document.getElementById('chatLaunch'),welcome=document.getElementById('aiWelcome'),reopen=document.getElementById('aiReopen'),form=document.getElementById('aiLiveTextForm'),input=document.getElementById('aiLiveTextInput'),skip=document.getElementById('aiWelcomeSkip');
+      if(!launch||!welcome||!form)return;
+      function setChatOpen(open){form.classList.toggle('is-open',open);launch.textContent=open?'Đóng khung chat':'Mở trò chuyện với Nhi';if(open&&input)window.setTimeout(function(){input.focus();},180);}
+      launch.addEventListener('click',function(event){event.preventDefault();event.stopPropagation();var open=!form.classList.contains('is-open');if(open&&welcome.classList.contains('is-hidden')&&reopen)reopen.click();else if(open)welcome.classList.remove('is-hidden');setChatOpen(open);});
+      if(skip)skip.addEventListener('click',function(){setChatOpen(false);});
     })();
   </script>
   <script>
@@ -641,7 +647,7 @@
         if(!sendLiveText(text))connectLive(false,false).then(function(){sendLiveText(text);}).catch(function(){setStatus('NHI CHƯA KẾT NỐI — THỬ LẠI','idle');});
       });
       document.addEventListener('pointerdown',function(){try{ensureAudioContext().resume();}catch(error){}},{once:true,capture:true});
-      welcome.addEventListener('click',function(event){var target=event.target;if(target&&target.closest&&target.closest('.ai-orb-stage'))return;shutdown();welcome.classList.add('is-hidden');});
+      welcome.addEventListener('click',function(event){var target=event.target;if(target&&target.closest&&(target.closest('.ai-orb-stage')||target.closest('.ai-live-text-form')))return;shutdown();welcome.classList.add('is-hidden');});
       reopen.addEventListener('click',function(event){event.stopPropagation();welcome.classList.remove('is-hidden');setStatus('NHI SẴN SÀNG','idle');connectLive(false,false).catch(function(){setStatus('NHI CHƯA KẾT NỐI — CHẠM ORB ĐỂ THỬ LẠI','idle');});});
       stage.addEventListener('click',activateOrb);
       stage.addEventListener('keydown',function(event){if(event.key==='Enter'||event.key===' '){event.preventDefault();activateOrb();}});
