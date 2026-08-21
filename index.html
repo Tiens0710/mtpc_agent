@@ -155,20 +155,19 @@
     @media(max-width:600px){.ai-orb{width:150px;height:150px}.ai-orb-stage{width:194px;height:194px}}
   </style>
   <style id="mtpc-entry-simple">
-    .ai-entry-prompt{background:rgba(16,50,30,.08);backdrop-filter:blur(3px)}
-    .ai-entry-card{width:min(360px,calc(100% - 28px));padding:26px 24px 22px;border:1px solid rgba(30,108,57,.2);border-radius:20px;background:rgba(248,255,249,.94);box-shadow:0 16px 42px rgba(21,72,37,.2);color:#155d31}
+    .ai-entry-prompt{background:rgba(4,24,12,.24);backdrop-filter:blur(3px)}
+    .ai-entry-card{width:min(370px,calc(100% - 28px));padding:28px 24px 23px;border:1px solid #e1e9e3;border-radius:14px;background:#fff;box-shadow:0 14px 36px rgba(14,47,25,.2);color:#1b3825}
     .ai-entry-card:before,.ai-entry-card:after{display:none}
-    .ai-entry-kicker{margin-bottom:10px;color:#248047;font-size:.62rem;letter-spacing:.12em}
-    .ai-entry-kicker i{width:6px;height:6px;background:#38b95d;box-shadow:0 0 8px rgba(56,185,93,.5)}
-    .ai-entry-title{color:#165d32;font-size:clamp(1.45rem,5vw,1.8rem);letter-spacing:-.035em}
-    .ai-entry-title span{color:#32a852}
-    .ai-entry-lead{margin:9px auto 18px;color:#5b7864;font-size:.8rem;line-height:1.5}
-    .ai-entry-launch{min-width:190px;padding:10px 16px;border:0;background:#1a9650;box-shadow:0 6px 14px rgba(26,150,80,.22),inset 0 1px 0 rgba(255,255,255,.25);color:#fff;font-size:.76rem}
-    .ai-entry-launch:before{width:6px;height:6px;background:#dffff0;box-shadow:none}
-    .ai-entry-launch:hover{background:#147d41;box-shadow:0 9px 18px rgba(26,150,80,.28);transform:translateY(-1px)}
-    .ai-entry-chat{position:relative;z-index:1;display:block;margin:11px auto 0;border:0;background:transparent;color:#2b7d47;font:600 .72rem/1 inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;transition:color .2s ease}.ai-entry-chat:hover{color:#125d30}
-    .ai-entry-hint{margin:10px 0 0;color:#799481;font-size:.6rem}
+    .ai-entry-kicker{display:none}
+    .ai-entry-title{color:#173523;font-size:clamp(1.5rem,5vw,1.85rem);letter-spacing:-.025em}
+    .ai-entry-title span{color:#23834a}
+    .ai-entry-lead{margin:10px auto 18px;color:#63736a;font-size:.84rem;line-height:1.5}
+    .ai-entry-launch{min-width:180px;padding:10px 16px;border:1px solid #20834a;border-radius:8px;background:#20834a;box-shadow:none;color:#fff;font-size:.76rem}
+    .ai-entry-launch:before{display:none}
+    .ai-entry-launch:hover{background:#176e3c;box-shadow:none;transform:translateY(-1px)}
+    .ai-entry-hint{margin:11px 0 0;color:#87968c;font-size:.62rem}
     .chat-window.open{display:flex!important}
+    .chat-launch{position:fixed;left:50%;bottom:18px;z-index:1291;display:flex;align-items:center;justify-content:center;padding:9px 16px;border:1px solid #d6e7da;border-radius:999px;background:#fff;color:#216e3d;box-shadow:0 5px 18px rgba(17,67,34,.16);font:600 .72rem/1 inherit;cursor:pointer;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(-50%) translateY(8px);transition:opacity .2s ease,visibility .2s ease,transform .2s ease,background .2s ease}.ai-welcome.is-hidden~.chat-launch{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%)}.chat-launch:hover{background:#f2faf4;transform:translateX(-50%) translateY(-2px)}
   </style>
 </head>
 <body>
@@ -258,9 +257,10 @@
 
   <button class="scroll-top" id="scrollTop" aria-label="Lên đầu trang">↑</button>
   <div class="floating-social"><a class="social-float" href="#" aria-label="Facebook"><img src="mtpc-assets/facebook-f-logo.webp" alt="Facebook"></a><a class="social-float" href="https://zalo.me/0375711766" aria-label="Zalo"><img src="mtpc-assets/Icon_of_Zalo.svg.webp" alt="Zalo"></a></div>
-  <div class="ai-entry-prompt" id="aiEntryPrompt" role="dialog" aria-modal="true" aria-labelledby="aiEntryTitle"><div class="ai-entry-card"><p class="ai-entry-kicker"><i></i>TRỢ LÝ TUYỂN SINH MTPC</p><h2 class="ai-entry-title" id="aiEntryTitle">Xin chào, <span>mình là Nhi</span></h2><p class="ai-entry-lead">Mình có thể đồng hành và tư vấn cho bạn về ngành học, tuyển sinh và tương lai nghề nghiệp.</p><button class="ai-entry-launch" id="aiEntryLaunch" type="button">Bắt đầu trò chuyện <b>↗</b></button><button class="ai-entry-chat" id="aiEntryChat" type="button">Mở khung chat</button><p class="ai-entry-hint">Chọn cách bạn muốn trò chuyện</p></div></div>
+  <div class="ai-entry-prompt" id="aiEntryPrompt" role="dialog" aria-modal="true" aria-labelledby="aiEntryTitle"><div class="ai-entry-card"><h2 class="ai-entry-title" id="aiEntryTitle">Xin chào, <span>mình là Nhi</span></h2><p class="ai-entry-lead">Trợ lý tuyển sinh của Trường Trung cấp Miền Tây.</p><button class="ai-entry-launch" id="aiEntryLaunch" type="button">Bắt đầu trò chuyện</button><p class="ai-entry-hint">Bấm để bắt đầu</p></div></div>
   <section class="ai-welcome is-hidden" id="aiWelcome" aria-label="Trợ lý tuyển sinh Nhi"><div class="ai-welcome-card"><img class="ai-school-logo" src="mtpc-assets/logo.png" alt="Trường Trung cấp Miền Tây"><div class="ai-welcome-intro"><p class="ai-welcome-eyebrow"><i></i>TRỢ LÝ TUYỂN SINH MTPC</p><h2>Xin chào, <span>mình là Nhi</span></h2><p class="ai-welcome-lead">Trợ lý tuyển sinh AI của Trường Trung cấp Miền Tây.</p></div><div class="ai-welcome-orb-side"><div class="ai-orb-stage" aria-hidden="true"><div class="ai-orb"><span class="ai-orb-mark">N</span></div></div></div><div class="ai-welcome-status" id="aiWelcomeStatus">NHI ĐANG KẾT NỐI</div><form class="ai-welcome-form" id="aiWelcomeForm"><input id="aiWelcomeInput" autocomplete="off"><button class="ai-welcome-send" type="submit">➜</button></form><div class="ai-welcome-suggestions"><button type="button" data-ai-question="MTPC có những ngành nào?">Ngành học</button></div><button class="ai-welcome-skip" id="aiWelcomeSkip" type="button" aria-label="Đóng trợ lý và xem website">Xem website</button><p class="ai-welcome-note"><span>●</span></p></div></section>
   <button class="ai-reopen" id="aiReopen" type="button" aria-label="Mở lại trợ lý Nhi"><span class="ai-reopen-core"><i></i><i></i><i></i><i></i></span></button>
+  <button class="chat-launch" id="chatLaunch" type="button">Mở khung chat</button>
 
   <aside class="chat-window" id="chatWindow" aria-label="Trợ lý tuyển sinh Nhi"><div class="chat-header"><div class="chat-head-info"><div class="chat-avatar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73C10.4 5.39 10 4.74 10 4a2 2 0 0 1 2-2m-4.5 11A2.5 2.5 0 1 0 10 15.5 2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 1 0 2.5 2.5 2.5 2.5 0 0 0-2.5-2.5Z"/></svg></div><div><h3>Nhi — Trợ lý tuyển sinh MTPC</h3><p><span class="online-dot"></span>Nhi đang trực</p></div></div><div class="chat-head-actions"><button id="soundBtn" aria-label="Bật tắt âm thanh">🔊</button><button id="closeChat" aria-label="Đóng chat">✕</button></div></div><div class="chat-body" id="chatBody"><div class="chat-message bot"><div class="message-content">Xin chào! 👋 Mình là Nhi, trợ lý tư vấn tuyển sinh của Trường Trung cấp Miền Tây. Bạn quan tâm ngành nào ạ?</div><span class="message-time">Bây giờ</span></div></div><form class="chat-footer" id="chatForm"><div class="chat-input-wrap"><input class="chat-input" id="chatInput" placeholder="Nhập câu hỏi..." autocomplete="off"><button class="chat-send" id="chatSend" type="submit" aria-label="Gửi"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button></div></form></aside>
   <button class="chat-bubble nhi-orb" id="chatBubble" aria-label="Mở trò chuyện với Nhi"><span class="nhi-orb-label"><strong>Nhi</strong><small>Tư vấn tuyển sinh</small></span><span class="nhi-orb-rings" aria-hidden="true"></span><span class="nhi-orb-core" aria-hidden="true"><span class="nhi-orb-letter">N</span><span class="nhi-orb-spark">✦</span></span><span class="nhi-orb-close" aria-hidden="true">×</span></button>
@@ -282,6 +282,13 @@
     document.getElementById('playVideo').addEventListener('click',()=>alert('Video giới thiệu sẽ được cập nhật từ kênh chính thức của MTPC.'));
     const chatWin=document.getElementById('chatWindow'),chatBubble=document.getElementById('chatBubble'),closeChat=document.getElementById('closeChat'),chatForm=document.getElementById('chatForm'),chatInput=document.getElementById('chatInput'),chatBody=document.getElementById('chatBody'),soundBtn=document.getElementById('soundBtn');let soundOn=true,history=[];function toggleChat(){chatWin.classList.toggle('open');chatBubble.classList.toggle('open');if(chatWin.classList.contains('open'))setTimeout(()=>chatInput.focus(),180)}chatBubble.addEventListener('click',toggleChat);closeChat.addEventListener('click',toggleChat);soundBtn.addEventListener('click',()=>{soundOn=!soundOn;soundBtn.textContent=soundOn?'🔊':'🔇'});function clock(){return new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}function addMessage(text,user,loading){let el=document.createElement('div');el.className='chat-message '+(user?'user':'bot');el.innerHTML='<div class="message-content">'+(loading?'<div class="typing"><span></span><span></span><span></span></div>':escapeHtml(text))+'</div><span class="message-time">'+clock()+'</span>';chatBody.appendChild(el);chatBody.scrollTop=chatBody.scrollHeight;return el}function escapeHtml(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}function renderSources(message,sources){if(!Array.isArray(sources)||!sources.length)return;let wrap=document.createElement('div');wrap.className='message-sources';sources.slice(0,3).forEach((source,index)=>{if(!source||!/^https:\/\/(www\.)?mtpc\.edu\.vn/i.test(source.url||''))return;let link=document.createElement('a');link.href=source.url;link.target='_blank';link.rel='noopener';link.textContent='Nguồn '+(index+1)+': '+(source.title||'MTPC');wrap.appendChild(link)});if(wrap.children.length)message.insertBefore(wrap,message.querySelector('.message-time'))}function speak(text){if(!soundOn||!('speechSynthesis'in window))return;let u=new SpeechSynthesisUtterance(text);u.lang='vi-VN';u.rate=.98;let voices=speechSynthesis.getVoices();let female=voices.find(v=>/vi-VN/i.test(v.lang)&&/female|linh|hoai|mai|nữ/i.test(v.name))||voices.find(v=>/vi-VN/i.test(v.lang));if(female)u.voice=female;speechSynthesis.cancel();speechSynthesis.speak(u)}chatForm.addEventListener('submit',async e=>{e.preventDefault();let text=chatInput.value.trim();if(!text)return;addMessage(text,true);history.push({role:'user',text});chatInput.value='';let pending=addMessage('',false,true);let content=pending.querySelector('.message-content');try{let response=await fetch('/api/chat.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})});let data=await response.json();if(!response.ok)throw new Error(data.error||'Không thể kết nối');let answer=data.text||'Mình chưa nhận được câu trả lời. Bạn thử lại giúp mình nhé.';content.textContent=answer;renderSources(pending,data.sources);history.push({role:'model',text:answer});speak(answer)}catch(err){content.textContent='Nhi đang tạm thời mất kết nối. Vui lòng thử lại sau hoặc liên hệ Zalo 0375 711 766.'}chatBody.scrollTop=chatBody.scrollHeight});
   })();
+  </script>
+  <script>
+    (function(){
+      var launch=document.getElementById('chatLaunch'),win=document.getElementById('chatWindow'),bubble=document.getElementById('chatBubble'),input=document.getElementById('chatInput');
+      if(!launch||!win)return;
+      launch.addEventListener('click',function(event){event.preventDefault();event.stopPropagation();win.classList.add('open');if(bubble)bubble.classList.add('open');window.setTimeout(function(){if(input)input.focus();},180);});
+    })();
   </script>
   <script>
     (function(){
@@ -324,16 +331,12 @@
       var welcome=document.getElementById('aiWelcome');
       var entryPrompt=document.getElementById('aiEntryPrompt');
       var entryLaunch=document.getElementById('aiEntryLaunch');
-      var entryChat=document.getElementById('aiEntryChat');
       var stage=document.querySelector('.ai-orb-stage');
       var status=document.querySelector('.ai-welcome-eyebrow');
       var statusPanel=document.getElementById('aiWelcomeStatus');
       var skip=document.getElementById('aiWelcomeSkip');
       var reopen=document.getElementById('aiReopen');
-      var chatWin=document.getElementById('chatWindow');
-      var chatBubble=document.getElementById('chatBubble');
-      var chatInput=document.getElementById('chatInput');
-      if(!welcome||!stage||!status||!skip||!reopen||!entryPrompt||!entryLaunch||!entryChat)return;
+      if(!welcome||!stage||!status||!skip||!reopen||!entryPrompt||!entryLaunch)return;
 
       var socket=null,setupReady=false,connectPromise=null,greetingSent=false,greetingPending=false;
       var audioContext=null,micStream=null,micSource=null,micProcessor=null,silentGain=null,analyser=null,meterFrame=0;
@@ -593,17 +596,7 @@
         setStatus('NHI ĐANG CHÀO MỪNG','thinking');
         connectLive(false,true).catch(function(){setStatus('CHẠM ORB ĐỂ THỬ LẠI','idle');});
       }
-      function openTextChat(event){
-        if(event){event.preventDefault();event.stopPropagation();}
-        shutdown();
-        entryPrompt.classList.add('is-hidden');
-        welcome.classList.add('is-hidden');
-        if(chatWin)chatWin.classList.add('open');
-        if(chatBubble)chatBubble.classList.add('open');
-        window.setTimeout(function(){if(chatInput)chatInput.focus();},180);
-      }
       entryLaunch.addEventListener('click',openFromEntry);
-      entryChat.addEventListener('click',openTextChat);
       document.addEventListener('pointerdown',function(){try{ensureAudioContext().resume();}catch(error){}},{once:true,capture:true});
       welcome.addEventListener('click',function(event){var target=event.target;if(target&&target.closest&&target.closest('.ai-orb-stage'))return;shutdown();welcome.classList.add('is-hidden');});
       reopen.addEventListener('click',function(event){event.stopPropagation();welcome.classList.remove('is-hidden');setStatus('NHI SẴN SÀNG','idle');connectLive(false,false).catch(function(){setStatus('NHI CHƯA KẾT NỐI — CHẠM ORB ĐỂ THỬ LẠI','idle');});});
