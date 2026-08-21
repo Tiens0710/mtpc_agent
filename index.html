@@ -373,9 +373,9 @@
             var done=false,timer=setTimeout(function(){if(!done)reject(new Error('Live setup timeout'));},15000);
             socket=new WebSocket(LIVE_ENDPOINT+'?access_token='+encodeURIComponent(tokenPayload.token));
             socket.addEventListener('open',function(){
-              socket.send(JSON.stringify({setup:{model:'models/'+(tokenPayload.model||MODEL),generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:'Aoede'}}}},inputAudioTranscription:{},outputAudioTranscription:{},sessionResumption:{},systemInstruction:{parts:[{text:SYSTEM_INSTRUCTION}]}}}));
+              socket.send(JSON.stringify({setup:{model:'models/'+(tokenPayload.model||MODEL),generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:'Zephyr'}}}},inputAudioTranscription:{},outputAudioTranscription:{},sessionResumption:{},systemInstruction:{parts:[{text:SYSTEM_INSTRUCTION}]}}}));
             });
-            socket.addEventListener('message',function(event){readSocketData(event.data,function(raw){var message;try{message=JSON.parse(raw);}catch(error){return;}if(message.setupComplete&&!done){done=true;clearTimeout(timer);setupReady=true;window.__MTPC_GEMINI_LIVE__={model:MODEL,voice:'Aoede',audio:'native-pcm'};console.info('MTPC voice source: Gemini Live native audio',window.__MTPC_GEMINI_LIVE__);resolve(true);}handleServerMessage(message);});});
+            socket.addEventListener('message',function(event){readSocketData(event.data,function(raw){var message;try{message=JSON.parse(raw);}catch(error){return;}if(message.setupComplete&&!done){done=true;clearTimeout(timer);setupReady=true;window.__MTPC_GEMINI_LIVE__={model:MODEL,voice:'Zephyr',audio:'native-pcm'};console.info('MTPC voice source: Gemini Live native audio',window.__MTPC_GEMINI_LIVE__);resolve(true);}handleServerMessage(message);});});
             socket.addEventListener('error',function(){if(!done){done=true;clearTimeout(timer);reject(new Error('Gemini Live socket error'));}});
             socket.addEventListener('close',function(){setupReady=false;socket=null;if(!welcome.classList.contains('is-hidden'))setStatus('KẾT NỐI LIVE ĐÃ ĐÓNG — CHẠM ĐỂ THỬ LẠI','idle');});
           });

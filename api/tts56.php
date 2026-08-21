@@ -36,7 +36,7 @@ if (!mtpc_tts_allow_request()) mtpc_tts_respond(429, array('error' => 'Bạn đ�
 
 $configPath = '/home/mtpc/private/gemini-config.php';
 $apiKey = getenv('GEMINI_API_KEY');
-$voice = 'Aoede';
+$voice = 'Zephyr';
 if (!$apiKey && is_file($configPath)) {
     require $configPath;
     $apiKey = isset($GEMINI_API_KEY) ? $GEMINI_API_KEY : '';
