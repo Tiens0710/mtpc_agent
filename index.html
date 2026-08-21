@@ -67,6 +67,8 @@
     .ai-welcome{display:grid;place-items:center;background:linear-gradient(rgba(4,55,28,.54),rgba(2,34,17,.76));backdrop-filter:blur(7px);pointer-events:auto}.ai-welcome:before{opacity:.24;background-image:radial-gradient(circle at 50% 38%,rgba(170,255,184,.45),transparent 38%)}.ai-welcome:after{display:none}.ai-welcome-card{display:flex;position:relative;align-items:center;justify-content:center;flex-direction:column;width:min(620px,calc(100% - 32px));height:auto;min-height:0;padding:28px 28px 24px;border:1px solid rgba(215,255,220,.18);border-radius:36px;background:linear-gradient(155deg,rgba(255,255,255,.13),rgba(8,77,38,.2));box-shadow:0 28px 90px rgba(0,32,14,.28);text-align:center}.ai-welcome-card:before{display:block;inset:9px;border:1px solid rgba(223,255,227,.1);border-radius:29px}.ai-school-logo{position:relative;z-index:3;width:min(230px,58vw);height:auto;margin:0 auto 8px;filter:brightness(0) invert(1) drop-shadow(0 5px 18px rgba(0,43,19,.24));opacity:.94}.ai-welcome-intro{position:relative;top:auto;left:auto;order:3;width:100%;max-width:500px;padding:0;border:0;text-align:center;text-shadow:0 3px 20px rgba(0,35,15,.32)}.ai-welcome-eyebrow{justify-content:center;margin:0 0 10px;color:#caffd1;font-size:.66rem;letter-spacing:.17em}.ai-welcome h2{max-width:none;margin:0;color:#fff;font-size:clamp(2rem,6vw,3.4rem);line-height:1.02;letter-spacing:-.045em}.ai-welcome h2 span{display:inline;color:#a4f4b2;text-shadow:0 0 18px rgba(119,244,140,.38)}.ai-welcome-lead{display:none}.ai-welcome-orb-side{position:relative;top:auto;left:auto;order:2;display:grid;min-height:0;margin:2px auto 4px;transform:none}.ai-welcome-orb-side:before{display:none}.ai-welcome-orb-side:after{width:258px;height:258px;border-color:rgba(181,255,193,.18);box-shadow:0 0 42px rgba(55,215,86,.24)}.ai-orb-stage{width:212px;height:212px}.ai-orb{width:160px;height:160px}.ai-welcome .ai-voice-wave{position:relative;top:auto;left:auto;order:4;width:190px;height:34px;margin:-8px auto 2px;transform:none}.ai-welcome-console{display:none}.ai-welcome-status{position:relative;left:auto;right:auto;bottom:auto;order:5;min-width:0;max-width:90%;margin-top:5px;padding:9px 15px;border:1px solid rgba(185,255,195,.24);border-radius:999px;background:rgba(4,60,28,.46);box-shadow:none;color:#e9ffec;font-size:.64rem;letter-spacing:.1em;text-align:center}.ai-welcome-status:before{font-size:.68rem}.ai-welcome-status:after{display:none}.ai-welcome-form,.ai-welcome-suggestions,.ai-welcome-note{display:none}.ai-welcome-skip{position:relative;left:auto;bottom:auto;order:6;transform:none;margin:15px 0 0;padding:8px 12px;border:0;background:transparent;color:rgba(236,255,239,.8);font-size:.66rem;text-decoration:underline;text-underline-offset:4px}.ai-welcome-skip:after{content:"→"}.ai-welcome[data-voice-state="listening"] .ai-welcome-card{border-color:rgba(164,255,179,.42)}@media(max-width:600px){.ai-welcome-card{width:calc(100% - 24px);padding:23px 16px 20px;border-radius:28px}.ai-welcome-card:before{border-radius:21px}.ai-school-logo{width:190px}.ai-orb-stage{width:178px;height:178px}.ai-orb{width:136px;height:136px}.ai-welcome-orb-side:after{width:218px;height:218px}.ai-welcome h2{font-size:clamp(1.85rem,10vw,2.8rem)}.ai-welcome .ai-voice-wave{width:160px}.ai-welcome-status{font-size:.57rem}}
     /* Final voice-orb presentation: no card, no copy, just the orb over a soft green veil. */
     .ai-welcome{background:linear-gradient(135deg,rgba(5,61,30,.22),rgba(2,39,19,.4));backdrop-filter:blur(16px) saturate(.82);-webkit-backdrop-filter:blur(16px) saturate(.82)}.ai-welcome-card{display:grid;place-items:center;width:100%;height:100%;min-height:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}.ai-welcome-card:before,.ai-welcome-intro,.ai-school-logo,.ai-welcome-status,.ai-welcome-skip,.ai-welcome-console,.ai-voice-wave{display:none!important}.ai-welcome-orb-side{position:relative;top:auto;left:auto;display:grid;place-items:center;min-height:0;margin:0;transform:none}.ai-welcome-orb-side:before{display:none!important}.ai-welcome-orb-side:after{width:360px;height:360px;border-color:rgba(169,255,181,.16);box-shadow:0 0 52px rgba(55,215,86,.2),inset 0 0 52px rgba(70,236,100,.08)}.ai-orb-stage{width:292px;height:292px;margin:0;cursor:pointer}.ai-orb{width:220px;height:220px}@media(max-width:600px){.ai-welcome-orb-side:after{width:285px;height:285px}.ai-orb-stage{width:230px;height:230px}.ai-orb{width:174px;height:174px}}
+    /* Voice actions give the page a quiet visual response without adding another chat panel. */
+    .mtpc-ai-focus{position:relative;z-index:2;animation:mtpcAiFocus 1.8s ease both;scroll-margin-top:118px}@keyframes mtpcAiFocus{0%{outline:0 solid rgba(86,220,104,0);outline-offset:0}28%{outline:3px solid rgba(86,220,104,.72);outline-offset:8px;box-shadow:0 0 0 7px rgba(86,220,104,.08),0 18px 45px rgba(25,112,48,.14)}100%{outline:0 solid rgba(86,220,104,0);outline-offset:14px}}
   </style>
 </head>
 <body>
@@ -217,7 +219,7 @@
       var MODEL='gemini-3.1-flash-live-preview';
       var TOKEN_ENDPOINT='/api/live-token.php';
       var LIVE_ENDPOINT='wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained';
-      var SYSTEM_INSTRUCTION='Bạn là Nhi, trợ lý tuyển sinh AI của Trường Trung cấp Miền Tây (MTPC) tại Cần Thơ. Luôn trò chuyện bằng tiếng Việt tự nhiên, rõ dấu và thân thiện như một tư vấn viên người Việt miền Nam. Dùng giọng nữ trẻ trung, phát âm tròn tiếng, không đánh vần, không kéo âm, không chèn tiếng Anh khi không cần thiết. Ưu tiên câu ngắn 1 đến 3 câu, có nhịp nghỉ tự nhiên, không đọc markdown, ký hiệu hoặc danh sách dài. Tư vấn về ngành học, tuyển sinh, học phí và hướng nghiệp. Thông tin chắc chắn: trường đào tạo theo hướng thực hành; địa chỉ 192-194 Ngô Quyền, phường An Hòa, quận Ninh Kiều, TP Cần Thơ; hotline và Zalo tuyển sinh 0375 711 766. Nếu chưa chắc dữ liệu, hãy nói rõ và hướng người dùng đến website chính thức hoặc hotline, không tự bịa thông tin.';
+      var SYSTEM_INSTRUCTION='Bạn là Nhi, trợ lý tuyển sinh AI của Trường Trung cấp Miền Tây (MTPC) tại Cần Thơ. Luôn trò chuyện bằng tiếng Việt tự nhiên, rõ dấu và thân thiện như một tư vấn viên người Việt miền Nam. Dùng giọng nữ trẻ trung, phát âm tròn tiếng, không đánh vần, không kéo âm, không chèn tiếng Anh khi không cần thiết. Ưu tiên câu ngắn 1 đến 3 câu, có nhịp nghỉ tự nhiên, không đọc markdown, ký hiệu hoặc danh sách dài. Tư vấn về ngành học, tuyển sinh, học phí và hướng nghiệp. Bạn có thể điều khiển trang bằng các công cụ được cung cấp: khi người dùng yêu cầu mở, xem, cuộn, tìm hoặc đọc một phần của website thì phải gọi công cụ tương ứng, không tự nhận đã thao tác nếu chưa gọi công cụ. Không chạy mã tùy ý và không tự ý gửi biểu mẫu; nếu có thao tác gửi thông tin, luôn phải xin người dùng xác nhận trước. Thông tin chắc chắn: trường đào tạo theo hướng thực hành; địa chỉ 192-194 Ngô Quyền, phường An Hòa, quận Ninh Kiều, TP Cần Thơ; hotline và Zalo tuyển sinh 0375 711 766. Nếu chưa chắc dữ liệu, hãy gọi công cụ đọc dữ liệu trên trang hoặc nói rõ và hướng người dùng đến website chính thức/hotline, không tự bịa thông tin.';
       var welcome=document.getElementById('aiWelcome');
       var stage=document.querySelector('.ai-orb-stage');
       var status=document.querySelector('.ai-welcome-eyebrow');
@@ -228,6 +230,62 @@
       var socket=null,setupReady=false,connectPromise=null,greetingSent=false,greetingPending=false;
       var audioContext=null,micStream=null,micSource=null,micProcessor=null,silentGain=null,analyser=null,meterFrame=0;
       var playbackCursor=0,playbackSources=[],waveBars=[],eqBars=[];
+      var WEB_TOOLS=[{functionDeclarations:[
+        {name:'navigate_to_section',description:'Cuộn mượt đến một khu vực có sẵn trên website MTPC và làm nổi bật khu vực đó. Dùng khi người dùng muốn xem một phần của trang.',parameters:{type:'OBJECT',properties:{section:{type:'STRING',description:'Tên khu vực: home, about, why, news, vision, programs, admission, documents, timeline, testimonials, video, stats, partners hoặc contact.'}},required:['section']}},
+        {name:'open_program',description:'Tìm, cuộn đến và làm nổi bật một ngành đào tạo cụ thể trên website MTPC.',parameters:{type:'OBJECT',properties:{query:{type:'STRING',description:'Tên hoặc từ khóa ngành học, ví dụ Công nghệ thông tin, CNTT, Điều dưỡng, Dược sĩ, Y sĩ hoặc Hộ sinh.'}},required:['query']}},
+        {name:'show_admission_info',description:'Mở khu vực hướng dẫn đăng ký tuyển sinh và hồ sơ cần thiết. Dùng khi người dùng hỏi cách đăng ký hoặc cần hồ sơ.',parameters:{type:'OBJECT',properties:{topic:{type:'STRING',description:'Có thể là đăng ký, hồ sơ, quy trình hoặc tuyển sinh.'}}}},
+        {name:'read_current_section',description:'Đọc nội dung của khu vực đang hiển thị gần giữa màn hình để trả lời dựa trên dữ liệu thật của website.',parameters:{type:'OBJECT',properties:{}}},
+        {name:'list_programs',description:'Lấy danh sách các ngành đào tạo đang hiển thị trên website cùng mô tả và học phí.',parameters:{type:'OBJECT',properties:{}}},
+        {name:'scroll_page',description:'Cuộn website theo hướng người dùng yêu cầu.',parameters:{type:'OBJECT',properties:{direction:{type:'STRING',description:'Một trong các giá trị: up, down, top, bottom.'}},required:['direction']}},
+        {name:'set_assistant_visibility',description:'Ẩn hoặc hiện lớp trợ lý orb trên website.',parameters:{type:'OBJECT',properties:{visible:{type:'BOOLEAN',description:'true để hiện orb, false để ẩn orb.'}},required:['visible']}}
+      ]}];
+      var SECTION_SELECTORS={home:'#home',about:'#about',why:'section.why',news:'#news',vision:'section.vision',programs:'#programs',admission:'#admission',documents:'#documents',timeline:'section.timeline',testimonials:'#testimonials',video:'section.video-section',stats:'section.stats',partners:'section.partners',contact:'#contact'};
+      var SECTION_ALIASES={trangchu:'home',gioithieu:'about',lydo:'why',taitsaomtpc:'why',tintuc:'news',sukien:'news',tamnhin:'vision',nganh:'programs',nganhhoc:'programs',nganhdaotao:'programs',tuyensinh:'admission',dangky:'admission',hocso:'documents',hoso:'documents',lich:'timeline',thoigian:'timeline',sinhvien:'testimonials,video',gioithieuvideo:'video',thongke:'stats',doitac:'partners',lienhe:'contact',diachi:'contact'};
+      function fold(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');}
+      function sectionKey(value){var key=fold(value).replace(/[^a-z0-9]+/g,'');return SECTION_SELECTORS[key]?key:(SECTION_ALIASES[key]||key).split(',')[0];}
+      function sectionElement(value){var key=sectionKey(value),selector=SECTION_SELECTORS[key];return selector?document.querySelector(selector):null;}
+      function sectionTitle(element){var heading=element&&element.querySelector('h1,h2,h3');return heading?heading.textContent.trim():'';}
+      function sectionText(element,limit){return String(element&&('innerText'in element?element.innerText:element.textContent)||'').replace(/\s+/g,' ').trim().slice(0,limit||1800);}
+      function focusElement(element){if(!element)return;document.querySelectorAll('.mtpc-ai-focus').forEach(function(item){item.classList.remove('mtpc-ai-focus');});element.classList.add('mtpc-ai-focus');window.setTimeout(function(){element.classList.remove('mtpc-ai-focus');},2200);}
+      function goToElement(element){if(!element)return false;element.scrollIntoView({behavior:'smooth',block:'start'});focusElement(element);return true;}
+      function programCards(){return Array.prototype.slice.call(document.querySelectorAll('#programs .program-card'));}
+      function executeWebAction(name,args){
+        args=args&&typeof args==='object'?args:{};
+        if(name==='navigate_to_section'){
+          var target=sectionElement(args.section);
+          if(!target)return {ok:false,error:'Không tìm thấy khu vực này trên website.'};
+          goToElement(target);return {ok:true,section:sectionKey(args.section),title:sectionTitle(target)};
+        }
+        if(name==='open_program'){
+          var query=fold(args.query),compactQuery=query.replace(/\s+/g,''),cards=programCards(),match=null;
+          cards.forEach(function(card){if(match)return;var text=fold(card.textContent),compactText=text.replace(/\s+/g,'');var aliases=compactQuery==='cntt'||compactQuery.indexOf('congnghe')>-1||compactQuery.indexOf('thongtin')>-1?'congnghethongtin':compactQuery;if(compactText.indexOf(aliases)>-1||text.indexOf(query)>-1)match=card;});
+          if(!match)return {ok:false,error:'Chưa tìm thấy ngành phù hợp.',available:cards.map(function(card){return sectionText(card,260);})};
+          goToElement(match);return {ok:true,program:sectionText(match,900)};
+        }
+        if(name==='show_admission_info'){
+          var admission=sectionElement('admission'),documents=sectionElement('documents');
+          if(!admission)return {ok:false,error:'Chưa tìm thấy khu vực tuyển sinh.'};
+          goToElement(admission);return {ok:true,admission:sectionText(admission,1300),documents:sectionText(documents,700)};
+        }
+        if(name==='read_current_section'){
+          var candidates=Object.keys(SECTION_SELECTORS).map(function(key){return {key:key,element:sectionElement(key)};}).filter(function(item){return item.element;});
+          var viewportMid=window.innerHeight/2,best=candidates.sort(function(a,b){return Math.abs(a.element.getBoundingClientRect().top-viewportMid)-Math.abs(b.element.getBoundingClientRect().top-viewportMid);})[0];
+          if(!best)return {ok:false,error:'Không đọc được khu vực hiện tại.'};
+          return {ok:true,section:best.key,title:sectionTitle(best.element),text:sectionText(best.element,2000)};
+        }
+        if(name==='list_programs'){
+          return {ok:true,programs:programCards().map(function(card){return {name:(card.querySelector('h3')||{}).textContent||'',details:sectionText(card,700)};})};
+        }
+        if(name==='scroll_page'){
+          var direction=fold(args.direction);
+          if(direction==='top'||direction==='dau')window.scrollTo({top:0,behavior:'smooth'});else if(direction==='bottom'||direction==='cuoi')window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'});else window.scrollBy({top:direction==='up'||direction==='len'?-Math.max(420,window.innerHeight*.72):Math.max(420,window.innerHeight*.72),behavior:'smooth'});
+          return {ok:true,direction:direction};
+        }
+        if(name==='set_assistant_visibility'){
+          var visible=Boolean(args.visible);welcome.classList.toggle('is-hidden',!visible);return {ok:true,visible:visible};
+        }
+        return {ok:false,error:'Công cụ không được phép.'};
+      }
 
       var legacyChat=document.getElementById('chatForm');
       if(legacyChat&&legacyChat.parentNode)legacyChat.parentNode.replaceChild(legacyChat.cloneNode(true),legacyChat);
@@ -350,8 +408,21 @@
         if(data instanceof ArrayBuffer){callback(new TextDecoder().decode(data));return;}
         callback('');
       }
+      function sendToolResponses(functionCalls){
+        if(!socket||socket.readyState!==WebSocket.OPEN||!functionCalls||!functionCalls.length)return;
+        var responses=functionCalls.map(function(call){
+          var args=call.args||{};
+          if(typeof args==='string'){try{args=JSON.parse(args);}catch(error){args={};}}
+          var result;
+          try{result=executeWebAction(call.name,args);}catch(error){result={ok:false,error:'Không thể thực hiện thao tác trên trang.'};}
+          console.info('MTPC web action',call.name,args,result);
+          return {id:call.id,name:call.name,response:{result:result}};
+        });
+        socket.send(JSON.stringify({toolResponse:{functionResponses:responses}}));
+      }
       function handleServerMessage(message){
         if(message.error){setStatus('GEMINI LIVE ĐANG BẬN — THỬ LẠI','idle');return;}
+        if(message.toolCall&&message.toolCall.functionCalls){sendToolResponses(message.toolCall.functionCalls);return;}
         var content=message.serverContent;
         if(!content)return;
         if(content.interrupted){playbackSources.forEach(function(source){try{source.stop();}catch(error){}});playbackSources=[];playbackCursor=0;}
@@ -375,7 +446,7 @@
             var done=false,timer=setTimeout(function(){if(!done)reject(new Error('Live setup timeout'));},15000);
             socket=new WebSocket(LIVE_ENDPOINT+'?access_token='+encodeURIComponent(tokenPayload.token));
             socket.addEventListener('open',function(){
-              socket.send(JSON.stringify({setup:{model:'models/'+(tokenPayload.model||MODEL),generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:'Zephyr'}}}},inputAudioTranscription:{},outputAudioTranscription:{},sessionResumption:{},systemInstruction:{parts:[{text:SYSTEM_INSTRUCTION}]}}}));
+              socket.send(JSON.stringify({setup:{model:'models/'+(tokenPayload.model||MODEL),generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:'Zephyr'}}}},tools:WEB_TOOLS,inputAudioTranscription:{},outputAudioTranscription:{},sessionResumption:{},systemInstruction:{parts:[{text:SYSTEM_INSTRUCTION}]}}}));
             });
             socket.addEventListener('message',function(event){readSocketData(event.data,function(raw){var message;try{message=JSON.parse(raw);}catch(error){return;}if(message.setupComplete&&!done){done=true;clearTimeout(timer);setupReady=true;window.__MTPC_GEMINI_LIVE__={model:MODEL,voice:'Zephyr',audio:'native-pcm'};console.info('MTPC voice source: Gemini Live native audio',window.__MTPC_GEMINI_LIVE__);resolve(true);}handleServerMessage(message);});});
             socket.addEventListener('error',function(){if(!done){done=true;clearTimeout(timer);reject(new Error('Gemini Live socket error'));}});
