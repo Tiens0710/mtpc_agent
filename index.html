@@ -157,11 +157,12 @@
   <style id="mtpc-entry-simple">
     .ai-entry-prompt{background:rgba(4,42,21,.18);backdrop-filter:blur(12px)}
     .ai-entry-card{width:min(430px,calc(100% - 28px));padding:31px 28px 29px;border:1px solid rgba(221,255,228,.38);border-radius:24px;background:linear-gradient(135deg,rgba(12,102,54,.58),rgba(5,64,32,.36));box-shadow:0 20px 60px rgba(3,43,20,.25),inset 0 1px 0 rgba(255,255,255,.25);backdrop-filter:blur(18px) saturate(125%);color:#fff}
-    .ai-entry-card:before,.ai-entry-card:after{display:none}
+    .ai-entry-card:before{content:"";position:absolute;inset:1px;border-radius:23px;background:linear-gradient(135deg,rgba(255,255,255,.16),transparent 45%);pointer-events:none}
+    .ai-entry-card:after{content:"";position:absolute;inset:10px;border:1px solid rgba(226,255,232,.14);border-radius:17px;pointer-events:none}
     .ai-entry-kicker{display:none}
-    .ai-entry-title{color:#fff;font-size:clamp(1.55rem,5vw,2rem);letter-spacing:-.03em;line-height:1.15}
+    .ai-entry-title{position:relative;z-index:1;color:#fff;font-size:clamp(1.55rem,5vw,2rem);letter-spacing:-.03em;line-height:1.15}
     .ai-entry-title span{color:#b2f8bb}
-    .ai-entry-lead{margin:12px auto 0;color:rgba(239,255,242,.84);font-size:.88rem;line-height:1.5}
+    .ai-entry-lead{display:none}
     .chat-window.open{display:flex!important}
   </style>
 </head>
@@ -252,7 +253,7 @@
 
   <button class="scroll-top" id="scrollTop" aria-label="Lên đầu trang">↑</button>
   <div class="floating-social"><a class="social-float" href="#" aria-label="Facebook"><img src="mtpc-assets/facebook-f-logo.webp" alt="Facebook"></a><a class="social-float" href="https://zalo.me/0375711766" aria-label="Zalo"><img src="mtpc-assets/Icon_of_Zalo.svg.webp" alt="Zalo"></a></div>
-  <div class="ai-entry-prompt" id="aiEntryPrompt" role="dialog" aria-modal="true" aria-labelledby="aiEntryTitle"><div class="ai-entry-card"><h2 class="ai-entry-title" id="aiEntryTitle">Chào bạn đến với <span>Trung cấp Miền Tây</span></h2><p class="ai-entry-lead">Mình là Nhi, trợ lý tuyển sinh luôn sẵn sàng đồng hành cùng bạn.</p></div></div>
+  <div class="ai-entry-prompt" id="aiEntryPrompt" role="dialog" aria-modal="true" aria-labelledby="aiEntryTitle"><div class="ai-entry-card"><h2 class="ai-entry-title" id="aiEntryTitle">Chào bạn đến với <span>Trung cấp Miền Tây</span></h2></div></div>
   <section class="ai-welcome is-hidden" id="aiWelcome" aria-label="Trợ lý tuyển sinh Nhi"><div class="ai-welcome-card"><img class="ai-school-logo" src="mtpc-assets/logo.png" alt="Trường Trung cấp Miền Tây"><div class="ai-welcome-intro"><p class="ai-welcome-eyebrow"><i></i>TRỢ LÝ TUYỂN SINH MTPC</p><h2>Xin chào, <span>mình là Nhi</span></h2><p class="ai-welcome-lead">Trợ lý tuyển sinh AI của Trường Trung cấp Miền Tây.</p></div><div class="ai-welcome-orb-side"><div class="ai-orb-stage" aria-hidden="true"><div class="ai-orb"><span class="ai-orb-mark">N</span></div></div></div><div class="ai-welcome-status" id="aiWelcomeStatus">NHI ĐANG KẾT NỐI</div><form class="ai-welcome-form" id="aiWelcomeForm"><input id="aiWelcomeInput" autocomplete="off"><button class="ai-welcome-send" type="submit">➜</button></form><div class="ai-welcome-suggestions"><button type="button" data-ai-question="MTPC có những ngành nào?">Ngành học</button></div><button class="ai-welcome-skip" id="aiWelcomeSkip" type="button" aria-label="Đóng trợ lý và xem website">Xem website</button><p class="ai-welcome-note"><span>●</span></p></div></section>
   <button class="ai-reopen" id="aiReopen" type="button" aria-label="Mở lại trợ lý Nhi"><span class="ai-reopen-core"><i></i><i></i><i></i><i></i></span></button>
 
