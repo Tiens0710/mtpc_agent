@@ -383,7 +383,9 @@
           if(sendGreeting&&!greetingSent){
             greetingSent=true;
             greetingPending=true;
-            sendLiveText('Hãy nói đúng một câu chào ngắn bằng tiếng Việt: Chào mừng bạn đến với Trường Trung cấp Miền Tây. Mình là Nhi, rất vui được đồng hành cùng bạn.');
+            var greetingStyles=['ấm áp và gần gũi','tươi vui và trẻ trung','tự nhiên như đang đón một thí sinh mới'];
+            var greetingStyle=greetingStyles[Math.floor(Math.random()*greetingStyles.length)];
+            sendLiveText('Hãy tự sáng tạo một lời chào mở đầu bằng tiếng Việt cho khách vừa truy cập website Trường Trung cấp Miền Tây. Bạn là Nhi, trợ lý tuyển sinh của trường. Hãy nói theo phong cách '+greetingStyle+', chỉ đúng một câu ngắn, thân thiện và tự nhiên. Không dùng lại câu chào mẫu cố định, không đọc hướng dẫn, không dùng danh sách và không hỏi nhiều thông tin trong lời chào.');
           }
           return startMic?startMicrophone():true;
         }).catch(function(error){setStatus('NHI CHƯA KẾT NỐI — CHẠM ĐỂ THỬ LẠI','idle');throw error;}).then(function(value){connectPromise=null;return value;},function(error){connectPromise=null;throw error;});
