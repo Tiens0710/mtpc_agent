@@ -166,7 +166,9 @@
     .ai-entry-launch{min-width:190px;padding:10px 16px;border:0;background:#1a9650;box-shadow:0 6px 14px rgba(26,150,80,.22),inset 0 1px 0 rgba(255,255,255,.25);color:#fff;font-size:.76rem}
     .ai-entry-launch:before{width:6px;height:6px;background:#dffff0;box-shadow:none}
     .ai-entry-launch:hover{background:#147d41;box-shadow:0 9px 18px rgba(26,150,80,.28);transform:translateY(-1px)}
+    .ai-entry-chat{position:relative;z-index:1;display:block;margin:11px auto 0;border:0;background:transparent;color:#2b7d47;font:600 .72rem/1 inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;transition:color .2s ease}.ai-entry-chat:hover{color:#125d30}
     .ai-entry-hint{margin:10px 0 0;color:#799481;font-size:.6rem}
+    .chat-window.open{display:flex!important}
   </style>
 </head>
 <body>
@@ -256,7 +258,7 @@
 
   <button class="scroll-top" id="scrollTop" aria-label="Lên đầu trang">↑</button>
   <div class="floating-social"><a class="social-float" href="#" aria-label="Facebook"><img src="mtpc-assets/facebook-f-logo.webp" alt="Facebook"></a><a class="social-float" href="https://zalo.me/0375711766" aria-label="Zalo"><img src="mtpc-assets/Icon_of_Zalo.svg.webp" alt="Zalo"></a></div>
-  <div class="ai-entry-prompt" id="aiEntryPrompt" role="dialog" aria-modal="true" aria-labelledby="aiEntryTitle"><div class="ai-entry-card"><p class="ai-entry-kicker"><i></i>TRỢ LÝ TUYỂN SINH MTPC</p><h2 class="ai-entry-title" id="aiEntryTitle">Xin chào, <span>mình là Nhi</span></h2><p class="ai-entry-lead">Mình có thể đồng hành và tư vấn cho bạn về ngành học, tuyển sinh và tương lai nghề nghiệp.</p><button class="ai-entry-launch" id="aiEntryLaunch" type="button">Bắt đầu trò chuyện <b>↗</b></button><p class="ai-entry-hint">Bấm để mở trợ lý giọng nói</p></div></div>
+  <div class="ai-entry-prompt" id="aiEntryPrompt" role="dialog" aria-modal="true" aria-labelledby="aiEntryTitle"><div class="ai-entry-card"><p class="ai-entry-kicker"><i></i>TRỢ LÝ TUYỂN SINH MTPC</p><h2 class="ai-entry-title" id="aiEntryTitle">Xin chào, <span>mình là Nhi</span></h2><p class="ai-entry-lead">Mình có thể đồng hành và tư vấn cho bạn về ngành học, tuyển sinh và tương lai nghề nghiệp.</p><button class="ai-entry-launch" id="aiEntryLaunch" type="button">Bắt đầu trò chuyện <b>↗</b></button><button class="ai-entry-chat" id="aiEntryChat" type="button">Mở khung chat</button><p class="ai-entry-hint">Chọn cách bạn muốn trò chuyện</p></div></div>
   <section class="ai-welcome is-hidden" id="aiWelcome" aria-label="Trợ lý tuyển sinh Nhi"><div class="ai-welcome-card"><img class="ai-school-logo" src="mtpc-assets/logo.png" alt="Trường Trung cấp Miền Tây"><div class="ai-welcome-intro"><p class="ai-welcome-eyebrow"><i></i>TRỢ LÝ TUYỂN SINH MTPC</p><h2>Xin chào, <span>mình là Nhi</span></h2><p class="ai-welcome-lead">Trợ lý tuyển sinh AI của Trường Trung cấp Miền Tây.</p></div><div class="ai-welcome-orb-side"><div class="ai-orb-stage" aria-hidden="true"><div class="ai-orb"><span class="ai-orb-mark">N</span></div></div></div><div class="ai-welcome-status" id="aiWelcomeStatus">NHI ĐANG KẾT NỐI</div><form class="ai-welcome-form" id="aiWelcomeForm"><input id="aiWelcomeInput" autocomplete="off"><button class="ai-welcome-send" type="submit">➜</button></form><div class="ai-welcome-suggestions"><button type="button" data-ai-question="MTPC có những ngành nào?">Ngành học</button></div><button class="ai-welcome-skip" id="aiWelcomeSkip" type="button" aria-label="Đóng trợ lý và xem website">Xem website</button><p class="ai-welcome-note"><span>●</span></p></div></section>
   <button class="ai-reopen" id="aiReopen" type="button" aria-label="Mở lại trợ lý Nhi"><span class="ai-reopen-core"><i></i><i></i><i></i><i></i></span></button>
 
@@ -298,7 +300,6 @@
       return; // Replaced by the Gemini 3.1 Flash Live client below.
       var welcome=document.getElementById('aiWelcome'),stage=document.querySelector('.ai-orb-stage'),status=welcome.querySelector('.ai-welcome-eyebrow'),statusPanel=document.getElementById('aiWelcomeStatus'),skip=document.getElementById('aiWelcomeSkip'),bars=[],waveBars=[],history=[],recognition=null,stream=null,context=null,analyser=null,frame=null,listening=false,welcomeSpoken=false,audioContext=null,activeAudio=null,pendingGreeting=null,ignoreOrbClick=false;
       if(!welcome||!stage)return;
-      var legacyChat=document.getElementById('chatForm');if(legacyChat&&legacyChat.parentNode)legacyChat.parentNode.replaceChild(legacyChat.cloneNode(true),legacyChat);
       bars=Array.prototype.slice.call(stage.querySelectorAll('.ai-eq-bar'));var waveform=document.createElement('div');waveform.className='ai-voice-wave';for(var waveIndex=0;waveIndex<27;waveIndex++)waveform.appendChild(document.createElement('i'));stage.insertAdjacentElement('afterend',waveform);waveBars=Array.prototype.slice.call(waveform.children);stage.removeAttribute('aria-hidden');stage.tabIndex=0;stage.setAttribute('role','button');stage.setAttribute('aria-label','Chạm để nói với Nhi');skip.textContent='Xem website';
       function setStatus(text,state){welcome.dataset.voiceState=state||'idle';status.innerHTML='<i></i>MTPC SYSTEM // '+(state==='listening'?'ĐANG LẮNG NGHE':state==='speaking'?'NHI ĐANG TRẢ LỜI':state==='thinking'?'NHI ĐANG XỬ LÝ':'ONLINE');if(statusPanel)statusPanel.textContent=text.replace(/^NHI \/\/ /,'');}
       function stopMeter(){if(frame)cancelAnimationFrame(frame);frame=null;if(stream){stream.getTracks().forEach(function(track){track.stop();});stream=null;}if(context){context.close();context=null;}analyser=null;stage.style.setProperty('--voice-level','0');}
@@ -323,12 +324,16 @@
       var welcome=document.getElementById('aiWelcome');
       var entryPrompt=document.getElementById('aiEntryPrompt');
       var entryLaunch=document.getElementById('aiEntryLaunch');
+      var entryChat=document.getElementById('aiEntryChat');
       var stage=document.querySelector('.ai-orb-stage');
       var status=document.querySelector('.ai-welcome-eyebrow');
       var statusPanel=document.getElementById('aiWelcomeStatus');
       var skip=document.getElementById('aiWelcomeSkip');
       var reopen=document.getElementById('aiReopen');
-      if(!welcome||!stage||!status||!skip||!reopen||!entryPrompt||!entryLaunch)return;
+      var chatWin=document.getElementById('chatWindow');
+      var chatBubble=document.getElementById('chatBubble');
+      var chatInput=document.getElementById('chatInput');
+      if(!welcome||!stage||!status||!skip||!reopen||!entryPrompt||!entryLaunch||!entryChat)return;
 
       var socket=null,setupReady=false,connectPromise=null,greetingSent=false,greetingPending=false;
       var audioContext=null,micStream=null,micSource=null,micProcessor=null,silentGain=null,analyser=null,meterFrame=0;
@@ -390,8 +395,6 @@
         return {ok:false,error:'Công cụ không được phép.'};
       }
 
-      var legacyChat=document.getElementById('chatForm');
-      if(legacyChat&&legacyChat.parentNode)legacyChat.parentNode.replaceChild(legacyChat.cloneNode(true),legacyChat);
       var oldWave=welcome.querySelector('.ai-voice-wave');
       if(oldWave)oldWave.parentNode.removeChild(oldWave);
       var waveform=document.createElement('div');
@@ -590,7 +593,17 @@
         setStatus('NHI ĐANG CHÀO MỪNG','thinking');
         connectLive(false,true).catch(function(){setStatus('CHẠM ORB ĐỂ THỬ LẠI','idle');});
       }
+      function openTextChat(event){
+        if(event){event.preventDefault();event.stopPropagation();}
+        shutdown();
+        entryPrompt.classList.add('is-hidden');
+        welcome.classList.add('is-hidden');
+        if(chatWin)chatWin.classList.add('open');
+        if(chatBubble)chatBubble.classList.add('open');
+        window.setTimeout(function(){if(chatInput)chatInput.focus();},180);
+      }
       entryLaunch.addEventListener('click',openFromEntry);
+      entryChat.addEventListener('click',openTextChat);
       document.addEventListener('pointerdown',function(){try{ensureAudioContext().resume();}catch(error){}},{once:true,capture:true});
       welcome.addEventListener('click',function(event){var target=event.target;if(target&&target.closest&&target.closest('.ai-orb-stage'))return;shutdown();welcome.classList.add('is-hidden');});
       reopen.addEventListener('click',function(event){event.stopPropagation();welcome.classList.remove('is-hidden');setStatus('NHI SẴN SÀNG','idle');connectLive(false,false).catch(function(){setStatus('NHI CHƯA KẾT NỐI — CHẠM ORB ĐỂ THỬ LẠI','idle');});});
