@@ -49,7 +49,7 @@ $text = is_array($body) && isset($body['text']) ? trim((string)$body['text']) : 
 if ($text === '') mtpc_tts_respond(400, array('error' => 'Text is required.'));
 if (function_exists('mb_substr')) $text = mb_substr($text, 0, 1400, 'UTF-8'); else $text = substr($text, 0, 4200);
 
-$prompt = "Read only the Vietnamese message below. Use a warm, friendly, youthful female admissions-assistant delivery. Speak clearly at a natural pace.\n\n" . $text;
+$prompt = "Đọc đúng nguyên văn đoạn tiếng Việt bên dưới bằng giọng nữ Zephyr, tự nhiên như tư vấn viên người Việt miền Nam. Phát âm rõ dấu, tròn tiếng, tốc độ vừa phải, có nhịp nghỉ tự nhiên; không đánh vần, không chèn tiếng Anh và không thêm lời dẫn.\n\n" . $text;
 $model = 'gemini-3.1-flash-tts-preview';
 $payload = json_encode(array(
     'contents' => array(array('parts' => array(array('text' => $prompt)))),
