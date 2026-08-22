@@ -347,58 +347,81 @@
       var playbackCursor=0,playbackSources=[],waveBars=[],eqBars=[];
       var liveTranscript=document.getElementById('aiLiveTranscript'),liveTextForm=document.getElementById('aiLiveTextForm'),liveTextInput=document.getElementById('aiLiveTextInput'),liveDrafts={user:{text:'',node:null},assistant:{text:'',node:null}};
       var WEB_TOOLS=[{functionDeclarations:[
-        {name:'navigate_to_section',description:'Cuộn mượt đến một khu vực có sẵn trên website MTPC và làm nổi bật khu vực đó. Dùng khi người dùng muốn xem một phần của trang.',parameters:{type:'OBJECT',properties:{section:{type:'STRING',description:'Tên khu vực: home, about, why, news, vision, programs, admission, documents, timeline, testimonials, video, stats, partners hoặc contact.'}},required:['section']}},
-        {name:'open_program',description:'Tìm, cuộn đến và làm nổi bật một ngành đào tạo cụ thể trên website MTPC.',parameters:{type:'OBJECT',properties:{query:{type:'STRING',description:'Tên hoặc từ khóa ngành học, ví dụ Công nghệ thông tin, CNTT, Điều dưỡng, Dược sĩ, Y sĩ hoặc Hộ sinh.'}},required:['query']}},
-        {name:'show_admission_info',description:'Mở khu vực hướng dẫn đăng ký tuyển sinh và hồ sơ cần thiết. Dùng khi người dùng hỏi cách đăng ký hoặc cần hồ sơ.',parameters:{type:'OBJECT',properties:{topic:{type:'STRING',description:'Có thể là đăng ký, hồ sơ, quy trình hoặc tuyển sinh.'}}}},
-        {name:'read_current_section',description:'Đọc nội dung của khu vực đang hiển thị gần giữa màn hình để trả lời dựa trên dữ liệu thật của website.',parameters:{type:'OBJECT',properties:{}}},
-        {name:'list_programs',description:'Lấy danh sách các ngành đào tạo đang hiển thị trên website cùng mô tả và học phí.',parameters:{type:'OBJECT',properties:{}}},
-        {name:'scroll_page',description:'Cuộn website theo hướng người dùng yêu cầu.',parameters:{type:'OBJECT',properties:{direction:{type:'STRING',description:'Một trong các giá trị: up, down, top, bottom.'}},required:['direction']}},
-        {name:'set_assistant_visibility',description:'Ẩn hoặc hiện lớp trợ lý orb trên website.',parameters:{type:'OBJECT',properties:{visible:{type:'BOOLEAN',description:'true để hiện orb, false để ẩn orb.'}},required:['visible']}}
+        {name:'navigate_to_section',description:'Đi đến một khu vực chính trên website MTPC, cuộn đúng vị trí không bị header che và làm nổi bật khu vực đó.',parameters:{type:'OBJECT',properties:{section:{type:'STRING',description:'Tên khu vực hoặc cách gọi tự nhiên: trang chủ, giới thiệu, lý do chọn MTPC, tin tức, tầm nhìn, ngành đào tạo, tuyển sinh, hồ sơ, lịch tuyển sinh, video, thống kê, đối tác hoặc liên hệ.'}},required:['section']}},
+        {name:'open_program',description:'Tìm ngành đào tạo theo tên, từ viết tắt hoặc từ khóa, cuộn đến đúng thẻ ngành và trả về mã ngành, thời gian học, chỉ tiêu, học phí và mô tả.',parameters:{type:'OBJECT',properties:{query:{type:'STRING',description:'Tên hoặc từ khóa ngành, ví dụ Công nghệ thông tin, CNTT, Điều dưỡng, Dược sĩ, Y sĩ hoặc Hộ sinh.'}},required:['query']}},
+        {name:'show_admission_info',description:'Mở đúng phần tuyển sinh hoặc hồ sơ tùy câu hỏi, rồi trả về thông tin đăng ký, giấy tờ cần chuẩn bị và các bước hiện có trên trang.',parameters:{type:'OBJECT',properties:{topic:{type:'STRING',description:'Chủ đề người dùng hỏi: đăng ký, quy trình, hồ sơ, giấy tờ, học phí, thời gian hoặc tuyển sinh.'}}}},
+        {name:'read_section',description:'Đọc một khu vực cụ thể trên website để trả lời dựa trên nội dung thật đang có, sau đó cuộn đến khu vực đó.',parameters:{type:'OBJECT',properties:{section:{type:'STRING',description:'Tên khu vực cần đọc, ví dụ ngành đào tạo, tuyển sinh, hồ sơ, liên hệ hoặc tin tức.'}},required:['section']}},
+        {name:'read_current_section',description:'Xác định phần đang nằm trong vùng nhìn thấy rõ nhất rồi đọc nội dung của phần đó, không chọn nhầm phần ở xa.',parameters:{type:'OBJECT',properties:{}}},
+        {name:'list_programs',description:'Lấy danh sách đầy đủ ngành đào tạo với tên, mã ngành, nhóm ngành, thời gian học, chỉ tiêu, học phí và mô tả.',parameters:{type:'OBJECT',properties:{query:{type:'STRING',description:'Từ khóa lọc tùy chọn như y tế, công nghệ, CNTT hoặc để trống để lấy tất cả.'}}}},
+        {name:'search_site',description:'Tìm kiếm thông tin thật trong các section, ngành học, hồ sơ, tin tức và liên hệ trên trang; cuộn đến kết quả phù hợp nhất và trả về các kết quả liên quan.',parameters:{type:'OBJECT',properties:{query:{type:'STRING',description:'Nội dung cần tìm, ví dụ học phí Điều dưỡng, địa chỉ, hồ sơ xét tuyển hoặc tuyển sinh 2026.'}},required:['query']}},
+        {name:'open_contact',description:'Mở khu vực liên hệ và trả về địa chỉ, hotline, giờ làm việc cùng liên kết chỉ đường. Dùng khi người dùng nói muốn liên hệ, hỏi địa chỉ, số điện thoại hoặc đường đi.',parameters:{type:'OBJECT',properties:{channel:{type:'STRING',description:'Kênh cần xem: info, phone, zalo hoặc map. Không tự gửi biểu mẫu hay tự gọi điện nếu người dùng chưa yêu cầu rõ.'}}}},
+        {name:'get_site_overview',description:'Lấy bản đồ nhanh của website gồm các khu vực chính, số lượng ngành và thông tin liên hệ để định hướng người dùng.',parameters:{type:'OBJECT',properties:{}}},
+        {name:'scroll_page',description:'Cuộn trang theo hướng người dùng yêu cầu, hỗ trợ lên, xuống, đầu trang, cuối trang và số pixel tùy chọn.',parameters:{type:'OBJECT',properties:{direction:{type:'STRING',description:'Một trong các giá trị: up, down, top, bottom hoặc các cách nói tương đương bằng tiếng Việt.'},amount:{type:'NUMBER',description:'Số pixel muốn cuộn, tùy chọn.'}},required:['direction']}},
+        {name:'set_assistant_visibility',description:'Ẩn hoặc hiện lớp trợ lý orb trên website. Khi ẩn, giữ lại nút mở trợ lý để người dùng có thể mở lại.',parameters:{type:'OBJECT',properties:{visible:{type:'BOOLEAN',description:'true để hiện orb, false để ẩn orb.'}},required:['visible']}}
       ]}];
       var SECTION_SELECTORS={home:'#home',about:'#about',why:'section.why',news:'#news',vision:'section.vision',programs:'#programs',admission:'#admission',documents:'#documents',timeline:'section.timeline',testimonials:'#testimonials',video:'section.video-section',stats:'section.stats',partners:'section.partners',contact:'#contact'};
-      var SECTION_ALIASES={trangchu:'home',gioithieu:'about',lydo:'why',taitsaomtpc:'why',tintuc:'news',sukien:'news',tamnhin:'vision',nganh:'programs',nganhhoc:'programs',nganhdaotao:'programs',tuyensinh:'admission',dangky:'admission',hocso:'documents',hoso:'documents',lich:'timeline',thoigian:'timeline',sinhvien:'testimonials,video',gioithieuvideo:'video',thongke:'stats',doitac:'partners',lienhe:'contact',diachi:'contact'};
+      var SECTION_ALIASES={trangchu:'home',home:'home',gioithieu:'about',about:'about',lydo:'why',lydochonmtpc:'why',taitsaomtpc:'why',tintuc:'news',sukien:'news',tamnhin:'vision',sumenh:'vision',nganh:'programs',nganhhoc:'programs',nganhdaotao:'programs',chuongtrinh:'programs',tuyensinh:'admission',dangky:'admission',xettuyen:'admission',hocso:'documents',hoso:'documents',giayto:'documents',lich:'timeline',thoigian:'timeline',sinhvien:'testimonials,video',gioithieuvideo:'video',thongke:'stats',doitac:'partners',lienhe:'contact',diachi:'contact',hotline:'contact',bando:'contact'};
       function fold(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');}
       function sectionKey(value){var key=fold(value).replace(/[^a-z0-9]+/g,'');return SECTION_SELECTORS[key]?key:(SECTION_ALIASES[key]||key).split(',')[0];}
       function sectionElement(value){var key=sectionKey(value),selector=SECTION_SELECTORS[key];return selector?document.querySelector(selector):null;}
       function sectionTitle(element){var heading=element&&element.querySelector('h1,h2,h3');return heading?heading.textContent.trim():'';}
       function sectionText(element,limit){return String(element&&('innerText'in element?element.innerText:element.textContent)||'').replace(/\s+/g,' ').trim().slice(0,limit||1800);}
-      function focusElement(element){if(!element)return;document.querySelectorAll('.mtpc-ai-focus').forEach(function(item){item.classList.remove('mtpc-ai-focus');});element.classList.add('mtpc-ai-focus');window.setTimeout(function(){element.classList.remove('mtpc-ai-focus');},2200);}
-      function goToElement(element){if(!element)return false;element.scrollIntoView({behavior:'smooth',block:'start'});focusElement(element);return true;}
+      function queryTerms(value){return fold(value).replace(/\bcntt\b/g,'cong nghe thong tin').replace(/\b(cho toi|cho minh|giup toi|hay|nhi|mo|xem|tim|tim kiem|phan|khu vuc|thong tin|nganh hoc|nganh|trang|website)\b/g,' ').split(/\s+/).filter(function(term){return term.length>1;});}
+      function scoreText(text,query){var hay=fold(text),terms=queryTerms(query),score=0;terms.forEach(function(term){if(hay.indexOf(term)>-1)score+=term.length>3?2:1;});return terms.length&&score>=Math.max(1,Math.ceil(terms.length*.55))?score:0;}
+      function focusElement(element){if(!element)return;document.querySelectorAll('.mtpc-ai-focus').forEach(function(item){item.classList.remove('mtpc-ai-focus');});element.classList.add('mtpc-ai-focus');window.setTimeout(function(){element.classList.remove('mtpc-ai-focus');},2600);}
+      function goToElement(element){if(!element)return false;var top=window.pageYOffset+element.getBoundingClientRect().top-96;window.scrollTo({top:Math.max(0,top),behavior:'smooth'});focusElement(element);return true;}
       function programCards(){return Array.prototype.slice.call(document.querySelectorAll('#programs .program-card'));}
+      function programInfo(card){var meta=Array.prototype.slice.call(card.querySelectorAll('.program-meta span')).map(function(item){return item.textContent.trim();}),heading=card.querySelector('h3'),image=card.querySelector('.program-image img'),badge=card.querySelector('.program-badge'),code=card.querySelector('.program-code');return {name:heading?heading.textContent.trim():'',category:badge?badge.textContent.trim():'',code:code?code.textContent.trim():'',duration:meta[0]||'',quota:meta[1]||'',tuition:meta[2]||'',description:sectionText(card.querySelector('.program-body')||card,700),image:image?image.getAttribute('src'):'',anchor:'#programs'};}
+      function contactData(){var contact=sectionElement('contact'),data={address:'',hotline:'',hours:'',mapUrl:''};if(!contact)return data;Array.prototype.forEach.call(contact.querySelectorAll('.map-info-card'),function(card){var label=card.querySelector('h4'),value=card.querySelector('p'),key=fold(label?label.textContent:'');if(key.indexOf('dia chi')>-1)data.address=value?value.textContent.trim():'';if(key.indexOf('hotline')>-1)data.hotline=value?value.textContent.trim():'';if(key.indexOf('gio lam')>-1)data.hours=value?value.textContent.trim():'';});var direction=contact.querySelector('.direction-btn');if(direction)data.mapUrl=direction.href||'';return data;}
+      function searchTargets(){var targets=[];Object.keys(SECTION_SELECTORS).forEach(function(key){var element=sectionElement(key);if(element)targets.push({type:'section',section:key,title:sectionTitle(element)||key,element:element,text:sectionText(element,2600)});});programCards().forEach(function(card){var info=programInfo(card);targets.push({type:'program',section:'programs',title:info.name,element:card,text:sectionText(card,1000)});});Array.prototype.forEach.call(document.querySelectorAll('.news-row,.featured-news,.doc-card,.timeline-item,.map-info-card'),function(element){var heading=element.querySelector('h3,h4');targets.push({type:'content',section:'',title:heading?heading.textContent.trim():'',element:element,text:sectionText(element,900)});});return targets;}
       function executeWebAction(name,args){
         args=args&&typeof args==='object'?args:{};
         if(name==='navigate_to_section'){
           var target=sectionElement(args.section);
-          if(!target)return {ok:false,error:'Không tìm thấy khu vực này trên website.'};
-          goToElement(target);return {ok:true,section:sectionKey(args.section),title:sectionTitle(target)};
+          if(!target)return {ok:false,error:'Không tìm thấy khu vực này trên website.',available:Object.keys(SECTION_SELECTORS)};
+          var section=sectionKey(args.section);goToElement(target);return {ok:true,section:section,title:sectionTitle(target),preview:sectionText(target,700)};
         }
         if(name==='open_program'){
-          var query=fold(args.query),compactQuery=query.replace(/\s+/g,''),cards=programCards(),match=null;
-          cards.forEach(function(card){if(match)return;var text=fold(card.textContent),compactText=text.replace(/\s+/g,'');var aliases=compactQuery==='cntt'||compactQuery.indexOf('congnghe')>-1||compactQuery.indexOf('thongtin')>-1?'congnghethongtin':compactQuery;if(compactText.indexOf(aliases)>-1||text.indexOf(query)>-1)match=card;});
-          if(!match)return {ok:false,error:'Chưa tìm thấy ngành phù hợp.',available:cards.map(function(card){return sectionText(card,260);})};
-          goToElement(match);return {ok:true,program:sectionText(match,900)};
+          var query=fold(args.query),cards=programCards(),match=null,bestScore=0;
+          cards.forEach(function(card){var score=scoreText(card.textContent,query);if(score>bestScore){bestScore=score;match=card;}});
+          if(!match)return {ok:false,error:'Chưa tìm thấy ngành phù hợp.',available:cards.map(function(card){return programInfo(card).name;})};
+          goToElement(match);return {ok:true,program:programInfo(match)};
         }
         if(name==='show_admission_info'){
-          var admission=sectionElement('admission'),documents=sectionElement('documents');
-          if(!admission)return {ok:false,error:'Chưa tìm thấy khu vực tuyển sinh.'};
-          goToElement(admission);return {ok:true,admission:sectionText(admission,1300),documents:sectionText(documents,700)};
+          var topic=fold(args.topic),targetAdmission=topic.indexOf('ho so')>-1||topic.indexOf('giay to')>-1?sectionElement('documents'):sectionElement('admission'),documents=sectionElement('documents'),admission=sectionElement('admission');
+          if(!targetAdmission)return {ok:false,error:'Chưa tìm thấy khu vực tuyển sinh hoặc hồ sơ.'};
+          goToElement(targetAdmission);return {ok:true,focus:sectionKey(topic.indexOf('ho so')>-1||topic.indexOf('giay to')>-1?'documents':'admission'),admission:sectionText(admission,1500),documents:sectionText(documents,1000)};
+        }
+        if(name==='read_section'){
+          var readTarget=sectionElement(args.section);if(!readTarget)return {ok:false,error:'Không tìm thấy phần cần đọc.',available:Object.keys(SECTION_SELECTORS)};goToElement(readTarget);return {ok:true,section:sectionKey(args.section),title:sectionTitle(readTarget),text:sectionText(readTarget,2600)};
         }
         if(name==='read_current_section'){
-          var candidates=Object.keys(SECTION_SELECTORS).map(function(key){return {key:key,element:sectionElement(key)};}).filter(function(item){return item.element;});
-          var viewportMid=window.innerHeight/2,best=candidates.sort(function(a,b){return Math.abs(a.element.getBoundingClientRect().top-viewportMid)-Math.abs(b.element.getBoundingClientRect().top-viewportMid);})[0];
-          if(!best)return {ok:false,error:'Không đọc được khu vực hiện tại.'};
-          return {ok:true,section:best.key,title:sectionTitle(best.element),text:sectionText(best.element,2000)};
+          var candidates=Object.keys(SECTION_SELECTORS).map(function(key){return {key:key,element:sectionElement(key)};}).filter(function(item){return item.element;}),viewportTop=96,viewportBottom=window.innerHeight*.78,best=null,bestVisible=-1;
+          candidates.forEach(function(item){var rect=item.element.getBoundingClientRect(),visible=Math.max(0,Math.min(rect.bottom,viewportBottom)-Math.max(rect.top,viewportTop));if(visible>bestVisible){bestVisible=visible;best=item;}});
+          if(!best||bestVisible<40)return {ok:false,error:'Không có khu vực website nào đang hiển thị đủ rõ để đọc.'};
+          return {ok:true,section:best.key,title:sectionTitle(best.element),text:sectionText(best.element,2400)};
         }
         if(name==='list_programs'){
-          return {ok:true,programs:programCards().map(function(card){return {name:(card.querySelector('h3')||{}).textContent||'',details:sectionText(card,700)};})};
+          var filter=fold(args.query),programs=programCards().map(programInfo);if(filter)programs=programs.filter(function(item){return scoreText(item.name+' '+item.category+' '+item.description,filter)>0;});return {ok:true,count:programs.length,programs:programs};
+        }
+        if(name==='search_site'){
+          var searchQuery=String(args.query||'').trim(),hits=searchTargets().map(function(item){return {item:item,score:scoreText(item.text,searchQuery)};}).filter(function(hit){return hit.score>0;}).sort(function(a,b){return b.score-a.score;});
+          if(!hits.length)return {ok:false,error:'Không tìm thấy nội dung phù hợp trên website.',query:searchQuery,suggestions:['ngành đào tạo','hồ sơ tuyển sinh','học phí','liên hệ']};
+          goToElement(hits[0].item.element);return {ok:true,query:searchQuery,focused:{type:hits[0].item.type,section:hits[0].item.section,title:hits[0].item.title},matches:hits.slice(0,6).map(function(hit){return {type:hit.item.type,section:hit.item.section,title:hit.item.title,excerpt:sectionText(hit.item.element,420)};})};
+        }
+        if(name==='open_contact'){
+          var contactTarget=sectionElement('contact');if(!contactTarget)return {ok:false,error:'Chưa tìm thấy khu vực liên hệ.'};goToElement(contactTarget);return {ok:true,channel:fold(args.channel||'info')||'info',contact:contactData()};
+        }
+        if(name==='get_site_overview'){
+          var overview={};Object.keys(SECTION_SELECTORS).forEach(function(key){var element=sectionElement(key);if(element)overview[key]={title:sectionTitle(element),preview:sectionText(element,260)};});return {ok:true,sections:overview,programCount:programCards().length,programs:programCards().map(function(card){return programInfo(card).name;}),contact:contactData()};
         }
         if(name==='scroll_page'){
-          var direction=fold(args.direction);
-          if(direction==='top'||direction==='dau')window.scrollTo({top:0,behavior:'smooth'});else if(direction==='bottom'||direction==='cuoi')window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'});else window.scrollBy({top:direction==='up'||direction==='len'?-Math.max(420,window.innerHeight*.72):Math.max(420,window.innerHeight*.72),behavior:'smooth'});
-          return {ok:true,direction:direction};
+          var direction=fold(args.direction),amount=Number(args.amount)||Math.max(420,window.innerHeight*.72),up=direction==='up'||direction==='len'||direction==='truoc'||direction==='previous';
+          if(direction==='top'||direction==='dau')window.scrollTo({top:0,behavior:'smooth'});else if(direction==='bottom'||direction==='cuoi')window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'});else window.scrollBy({top:up?-amount:amount,behavior:'smooth'});
+          return {ok:true,direction:direction,amount:direction==='top'||direction==='bottom'?0:amount};
         }
         if(name==='set_assistant_visibility'){
-          var visible=Boolean(args.visible);welcome.classList.toggle('is-hidden',!visible);return {ok:true,visible:visible};
+          var visible=Boolean(args.visible),textForm=document.getElementById('aiLiveTextForm');welcome.classList.toggle('is-hidden',!visible);if(!visible&&textForm)textForm.classList.remove('is-open');return {ok:true,visible:visible};
         }
         return {ok:false,error:'Công cụ không được phép.'};
       }
