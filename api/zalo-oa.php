@@ -2,6 +2,7 @@
 /* Public Zalo OA webhook owned by mtpc-agent. PHP 5.6 compatible. */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
+define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v4');
 
 function mtpc_zalo_agent_out($status, $payload) {
     http_response_code($status);
@@ -117,8 +118,12 @@ $action = isset($_GET['action']) ? trim((string)$_GET['action']) : '';
 if ($action === 'status' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     mtpc_zalo_agent_out(200, array(
         'ok' => true,
+        'service' => 'mtpc-agent',
+        'build' => MTPC_ZALO_AGENT_BUILD,
         'configured' => $config['access_token'] !== '' && $config['webhook_token'] !== '',
         'auto_reply' => (bool)$config['auto_reply'],
+        'token_state_loaded' => is_file('/home/mtpc/private/mtpc-zalo-oa/token-state.json'),
+        'token_refresh_configured' => $config['app_id'] !== '' && $config['secret_key'] !== '' && $config['refresh_token'] !== '',
         'webhook_url' => 'https://agent.mtpc.edu.vn/api/zalo-oa.php?action=webhook'
     ));
 }
@@ -220,6 +225,14 @@ function mtpc_zalo_agent_generate_reply($question) {
     if ($answer === '') throw new Exception('Gemini trả về nội dung rỗng.');
     return function_exists('mb_substr') && mb_strlen($answer, 'UTF-8') > 420 ? rtrim(mb_substr($answer, 0, 417, 'UTF-8')) . '…' : $answer;
 }
+function mtpc_zalo_agent_fallback_reply($question) {
+    $normalized = mtpc_zalo_agent_normalize($question);
+    if ($normalized === '' || preg_match('/^(xin chao|chao|hello|hi)$/', $normalized)) return 'Chào anh/chị! Em là Nhi, trợ lý tuyển sinh Trường Trung cấp Miền Tây. Anh/chị muốn tìm hiểu ngành học hay hồ sơ tuyển sinh ạ?';
+    if (strpos($normalized, 'nganh') !== false || strpos($normalized, 'hoc gi') !== false || strpos($normalized, 'dao tao') !== false) {
+        return 'Trường hiện đào tạo các ngành Y sĩ đa khoa, Dược sĩ trung học, Điều dưỡng, Hộ sinh và Công nghệ thông tin – Ứng dụng AI, Sửa chữa máy tính. Anh/chị muốn xem ngành nào ạ?';
+    }
+    return 'Nhi đang tạm thời chưa kết nối được hệ thống AI. Anh/chị vui lòng thử lại sau ít phút hoặc liên hệ Zalo tuyển sinh 0375 711 766.';
+}
 function mtpc_zalo_agent_send($config, $userId, $message) {
     $config = mtpc_zalo_agent_apply_token_state($config);
     if (!empty($config['access_token_expires_at']) && (int)$config['access_token_expires_at'] <= time()) $config = mtpc_zalo_agent_refresh_token($config);
@@ -257,7 +270,13 @@ mtpc_zalo_agent_log(array('direction' => 'inbound', 'event_name' => $eventName, 
 if (!$config['auto_reply'] || !$isUserText) mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => (bool)$config['auto_reply'], 'sent' => false)));
 
 try {
-    $reply = mtpc_zalo_agent_generate_reply($text);
+    try {
+        $reply = mtpc_zalo_agent_generate_reply($text);
+    } catch (Exception $aiError) {
+        error_log('[MTPC_AGENT_ZALO_AI] ' . $aiError->getMessage());
+        mtpc_zalo_agent_log(array('direction' => 'system', 'event_name' => 'ai_reply_fallback', 'user_id' => $userId, 'text' => $aiError->getMessage()));
+        $reply = mtpc_zalo_agent_fallback_reply($text);
+    }
     mtpc_zalo_agent_send($config, $userId, $reply);
     mtpc_zalo_agent_log(array('direction' => 'outbound', 'event_name' => 'auto_reply_text', 'user_id' => $userId, 'text' => $reply));
     mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => true, 'sent' => true)));
