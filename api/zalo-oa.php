@@ -18,7 +18,12 @@ $config = array(
     'access_token' => '',
     'webhook_token' => '',
     'send_url' => 'https://openapi.zalo.me/v3.0/oa/message/cs',
-    'auto_reply' => false
+    'auto_reply' => false,
+    'app_id' => '',
+    'secret_key' => '',
+    'refresh_token' => '',
+    'token_url' => 'https://oauth.zaloapp.com/v4/oa/access_token',
+    'access_token_expires_at' => 0
 );
 $configPath = '/home/mtpc/private/zalo-oa-config.php';
 if (is_file($configPath)) {
@@ -27,8 +32,19 @@ if (is_file($configPath)) {
     if (isset($MTPC_ZALO_OA_WEBHOOK_TOKEN)) $config['webhook_token'] = trim((string)$MTPC_ZALO_OA_WEBHOOK_TOKEN);
     if (isset($MTPC_ZALO_OA_SEND_URL) && trim((string)$MTPC_ZALO_OA_SEND_URL) !== '') $config['send_url'] = trim((string)$MTPC_ZALO_OA_SEND_URL);
     if (isset($MTPC_ZALO_OA_AUTO_REPLY)) $config['auto_reply'] = (bool)$MTPC_ZALO_OA_AUTO_REPLY;
+    if (isset($MTPC_ZALO_OA_APP_ID)) $config['app_id'] = trim((string)$MTPC_ZALO_OA_APP_ID);
+    if (isset($MTPC_ZALO_OA_SECRET_KEY)) $config['secret_key'] = trim((string)$MTPC_ZALO_OA_SECRET_KEY);
+    if (isset($MTPC_ZALO_OA_REFRESH_TOKEN)) $config['refresh_token'] = trim((string)$MTPC_ZALO_OA_REFRESH_TOKEN);
+    if (isset($MTPC_ZALO_OA_TOKEN_URL) && trim((string)$MTPC_ZALO_OA_TOKEN_URL) !== '') $config['token_url'] = trim((string)$MTPC_ZALO_OA_TOKEN_URL);
+    if (isset($MTPC_ZALO_OA_ACCESS_TOKEN_EXPIRES_AT)) $config['access_token_expires_at'] = (int)$MTPC_ZALO_OA_ACCESS_TOKEN_EXPIRES_AT;
 }
-foreach (array('access_token' => array('MTPC_ZALO_OA_ACCESS_TOKEN', 'ZALO_OA_ACCESS_TOKEN', 'ZALO_ACCESS_TOKEN'), 'webhook_token' => array('MTPC_ZALO_OA_WEBHOOK_TOKEN', 'ZALO_OA_WEBHOOK_TOKEN', 'ZALO_WEBHOOK_TOKEN')) as $field => $names) {
+foreach (array(
+    'access_token' => array('MTPC_ZALO_OA_ACCESS_TOKEN', 'ZALO_OA_ACCESS_TOKEN', 'ZALO_ACCESS_TOKEN'),
+    'webhook_token' => array('MTPC_ZALO_OA_WEBHOOK_TOKEN', 'ZALO_OA_WEBHOOK_TOKEN', 'ZALO_WEBHOOK_TOKEN'),
+    'app_id' => array('MTPC_ZALO_OA_APP_ID', 'ZALO_OA_APP_ID', 'ZALO_APP_ID'),
+    'secret_key' => array('MTPC_ZALO_OA_SECRET_KEY', 'ZALO_OA_SECRET_KEY', 'ZALO_SECRET_KEY'),
+    'refresh_token' => array('MTPC_ZALO_OA_REFRESH_TOKEN', 'ZALO_OA_REFRESH_TOKEN', 'ZALO_REFRESH_TOKEN')
+) as $field => $names) {
     foreach ($names as $name) {
         $value = getenv($name);
         if (is_string($value) && trim($value) !== '') {
@@ -45,6 +61,57 @@ foreach (array('MTPC_ZALO_OA_AUTO_REPLY', 'ZALO_OA_AUTO_REPLY') as $name) {
         break;
     }
 }
+
+function mtpc_zalo_agent_apply_token_state($config) {
+    $path = '/home/mtpc/private/mtpc-zalo-oa/token-state.json';
+    if (!is_file($path)) return $config;
+    $state = json_decode(@file_get_contents($path), true);
+    if (!is_array($state)) return $config;
+    if (!empty($state['access_token'])) $config['access_token'] = trim((string)$state['access_token']);
+    if (!empty($state['refresh_token'])) $config['refresh_token'] = trim((string)$state['refresh_token']);
+    if (!empty($state['expires_at'])) $config['access_token_expires_at'] = (int)$state['expires_at'];
+    return $config;
+}
+function mtpc_zalo_agent_save_token_state($state) {
+    $dir = '/home/mtpc/private/mtpc-zalo-oa';
+    if (!is_dir($dir) && !@mkdir($dir, 0750, true)) throw new Exception('Không tạo được vùng lưu token Zalo.');
+    $path = $dir . '/token-state.json';
+    if (@file_put_contents($path, json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . "\n", LOCK_EX) === false) throw new Exception('Không lưu được token Zalo đã làm mới.');
+}
+function mtpc_zalo_agent_refresh_token($config) {
+    foreach (array('app_id', 'secret_key', 'refresh_token') as $field) if (empty($config[$field])) throw new Exception('Thiếu cấu hình ' . strtoupper($field) . ' để làm mới token Zalo.');
+    $curl = curl_init($config['token_url']);
+    curl_setopt_array($curl, array(
+        CURLOPT_POST => true,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CONNECTTIMEOUT => 8,
+        CURLOPT_TIMEOUT => 20,
+        CURLOPT_HTTPHEADER => array('Content-Type: application/x-www-form-urlencoded', 'secret_key: ' . $config['secret_key']),
+        CURLOPT_POSTFIELDS => http_build_query(array('grant_type' => 'refresh_token', 'refresh_token' => $config['refresh_token'], 'app_id' => $config['app_id']), '', '&')
+    ));
+    $raw = curl_exec($curl); $status = (int)curl_getinfo($curl, CURLINFO_HTTP_CODE); $error = curl_error($curl); curl_close($curl);
+    $response = json_decode((string)$raw, true);
+    if ($raw === false || $status < 200 || $status >= 300 || !is_array($response) || empty($response['access_token'])) throw new Exception('Không thể làm mới token Zalo.' . ($error !== '' ? ' ' . $error : ''));
+    $state = array(
+        'access_token' => trim((string)$response['access_token']),
+        'refresh_token' => !empty($response['refresh_token']) ? trim((string)$response['refresh_token']) : $config['refresh_token'],
+        'expires_at' => time() + max(60, (int)(isset($response['expires_in']) ? $response['expires_in'] : 3600)) - 60,
+        'updated_at' => gmdate('c')
+    );
+    mtpc_zalo_agent_save_token_state($state);
+    $config['access_token'] = $state['access_token'];
+    $config['refresh_token'] = $state['refresh_token'];
+    $config['access_token_expires_at'] = $state['expires_at'];
+    return $config;
+}
+function mtpc_zalo_agent_log($row) {
+    $dir = '/home/mtpc/private/mtpc-zalo-oa';
+    if (!is_dir($dir)) @mkdir($dir, 0750, true);
+    $row['received_at'] = isset($row['received_at']) ? $row['received_at'] : gmdate('c');
+    @file_put_contents($dir . '/messages.jsonl', json_encode($row, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n", FILE_APPEND | LOCK_EX);
+}
+
+$config = mtpc_zalo_agent_apply_token_state($config);
 
 $action = isset($_GET['action']) ? trim((string)$_GET['action']) : '';
 if ($action === 'status' && $_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -154,14 +221,30 @@ function mtpc_zalo_agent_generate_reply($question) {
     return function_exists('mb_substr') && mb_strlen($answer, 'UTF-8') > 420 ? rtrim(mb_substr($answer, 0, 417, 'UTF-8')) . '…' : $answer;
 }
 function mtpc_zalo_agent_send($config, $userId, $message) {
-    if ($config['access_token'] === '') throw new Exception('Chưa cấu hình Zalo OA access token.');
+    $config = mtpc_zalo_agent_apply_token_state($config);
+    if (!empty($config['access_token_expires_at']) && (int)$config['access_token_expires_at'] <= time()) $config = mtpc_zalo_agent_refresh_token($config);
+    if ($config['access_token'] === '') {
+        if ($config['refresh_token'] !== '') $config = mtpc_zalo_agent_refresh_token($config);
+        else throw new Exception('Chưa cấu hình Zalo OA access token.');
+    }
+    $attempt = mtpc_zalo_agent_send_once($config, $userId, $message);
+    if ($attempt['token_error'] && $config['refresh_token'] !== '') {
+        $config = mtpc_zalo_agent_refresh_token($config);
+        $attempt = mtpc_zalo_agent_send_once($config, $userId, $message);
+    }
+    if (!$attempt['ok']) throw new Exception($attempt['error']);
+}
+function mtpc_zalo_agent_send_once($config, $userId, $message) {
     $payload = json_encode(array('recipient' => array('user_id' => $userId), 'message' => array('text' => $message)), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     $curl = curl_init($config['send_url']);
     curl_setopt_array($curl, array(CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_CONNECTTIMEOUT => 8, CURLOPT_TIMEOUT => 20, CURLOPT_HTTPHEADER => array('Content-Type: application/json', 'access_token: ' . $config['access_token']), CURLOPT_POSTFIELDS => $payload));
     $raw = curl_exec($curl); $status = (int)curl_getinfo($curl, CURLINFO_HTTP_CODE); $error = curl_error($curl); curl_close($curl);
     $response = json_decode($raw, true);
     $code = is_array($response) && isset($response['error']) ? (int)$response['error'] : 0;
-    if ($raw === false || $status < 200 || $status >= 300 || $code !== 0) throw new Exception('Zalo OA từ chối gửi tin (HTTP ' . $status . ').' . ($error !== '' ? ' ' . $error : ''));
+    $messageText = is_array($response) && isset($response['message']) ? strtolower((string)$response['message']) : '';
+    $tokenError = $status === 401 || strpos($messageText, 'access token') !== false || strpos($messageText, 'expired') !== false || strpos($messageText, 'invalid token') !== false;
+    $ok = $raw !== false && $status >= 200 && $status < 300 && $code === 0;
+    return array('ok' => $ok, 'token_error' => $tokenError, 'error' => 'Zalo OA từ chối gửi tin (HTTP ' . $status . ').' . ($error !== '' ? ' ' . $error : ''));
 }
 
 $event = json_decode(file_get_contents('php://input'), true);
@@ -170,13 +253,16 @@ $eventName = strtolower(mtpc_zalo_agent_first($event, array(array('event_name'),
 $userId = mtpc_zalo_agent_first($event, array(array('sender', 'id'), array('sender', 'user_id'), array('user_id'), array('from', 'id'), array('from', 'user_id')));
 $text = mtpc_zalo_agent_first($event, array(array('message', 'text'), array('message'), array('text')));
 $isUserText = $userId !== '' && $text !== '' && ($eventName === '' || $eventName === 'unknown' || $eventName === 'user_send_text' || strpos($eventName, 'user_send_') === 0);
+mtpc_zalo_agent_log(array('direction' => 'inbound', 'event_name' => $eventName, 'user_id' => $userId, 'text' => $text, 'payload' => $event));
 if (!$config['auto_reply'] || !$isUserText) mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => (bool)$config['auto_reply'], 'sent' => false)));
 
 try {
     $reply = mtpc_zalo_agent_generate_reply($text);
     mtpc_zalo_agent_send($config, $userId, $reply);
+    mtpc_zalo_agent_log(array('direction' => 'outbound', 'event_name' => 'auto_reply_text', 'user_id' => $userId, 'text' => $reply));
     mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => true, 'sent' => true)));
 } catch (Exception $error) {
     error_log('[MTPC_AGENT_ZALO_AUTO_REPLY] ' . $error->getMessage());
+    mtpc_zalo_agent_log(array('direction' => 'system', 'event_name' => 'auto_reply_error', 'user_id' => $userId, 'text' => $error->getMessage()));
     mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => true, 'sent' => false, 'error' => $error->getMessage())));
 }
