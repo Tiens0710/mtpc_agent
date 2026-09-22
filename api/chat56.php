@@ -23,28 +23,36 @@ function mtpc_retrieve($question) {
     $dir = '/home/mtpc/private/mtpc-knowledge';
     $chunksData = mtpc_read_json($dir . '/chunks.json', array());
     $indexData = mtpc_read_json($dir . '/index.json', array());
-    if (empty($chunksData['chunks'])) return array();
-    $byId = array(); foreach ($chunksData['chunks'] as $chunk) if (!empty($chunk['id'])) $byId[$chunk['id']] = $chunk;
+    $manualData = mtpc_read_json($dir . '/manual-bundle.json', array());
+    $allChunks = array();
+    if (!empty($chunksData['chunks'])) $allChunks = array_merge($allChunks, $chunksData['chunks']);
+    if (!empty($manualData['chunks'])) $allChunks = array_merge($allChunks, $manualData['chunks']);
+    if (!$allChunks) return array();
+    $byId = array(); foreach ($allChunks as $chunk) if (!empty($chunk['id'])) $byId[$chunk['id']] = $chunk;
     $scores = array(); $terms = mtpc_terms($question); $index = isset($indexData['terms']) ? $indexData['terms'] : array();
     foreach ($terms as $term) {
         if (!isset($index[$term])) continue;
         foreach ($index[$term] as $id) $scores[$id] = isset($scores[$id]) ? $scores[$id] + 3 : 3;
     }
     $normalizedQuestion = mtpc_normalize($question);
-    foreach ($scores as $id => $score) {
-        if (!isset($byId[$id])) { unset($scores[$id]); continue; }
-        $chunk = $byId[$id];
+    foreach ($byId as $id => $chunk) {
+        $score = isset($scores[$id]) ? $scores[$id] : 0;
         $title = mtpc_normalize(isset($chunk['title']) ? $chunk['title'] : '');
-        if ($title && strpos($normalizedQuestion, $title) !== false) $scores[$id] += 8;
-        foreach ($terms as $term) if (strpos($title, $term) !== false) $scores[$id] += 3;
+        $body = mtpc_normalize(isset($chunk['text']) ? $chunk['text'] : '');
+        if ($title && (strpos($normalizedQuestion, $title) !== false || strpos($title, $normalizedQuestion) !== false)) $score += 8;
+        foreach ($terms as $term) { if (strpos($title, $term) !== false) $score += 4; if (strpos($body, $term) !== false) $score += 1; }
+        if (isset($chunk['source_year']) && (int)$chunk['source_year'] >= (int)date('Y')) $score += 2;
+        if (isset($chunk['origin']) && ($chunk['origin'] === 'seed' || $chunk['origin'] === 'upload')) $score += 1;
+        if ($score > 0) $scores[$id] = $score;
     }
-    arsort($scores); $picked = array(); $urls = array();
+    arsort($scores); $picked = array(); $sources = array();
     foreach ($scores as $id => $score) {
         if (!isset($byId[$id])) continue;
         $chunk = $byId[$id];
-        if (empty($chunk['url']) || isset($urls[$chunk['url']])) continue;
-        $picked[] = $chunk; $urls[$chunk['url']] = true;
-        if (count($picked) >= 5) break;
+        $sourceKey = !empty($chunk['source_id']) ? $chunk['source_id'] : (!empty($chunk['url']) ? $chunk['url'] : $id);
+        if (isset($sources[$sourceKey])) continue;
+        $picked[] = $chunk; $sources[$sourceKey] = true;
+        if (count($picked) >= 6) break;
     }
     return $picked;
 }
@@ -64,7 +72,7 @@ foreach (array_slice($messages, -12) as $message) {
 if (!$contents || $question === '') mtpc_respond(400, array('error' => 'A message is required.'));
 $retrieved = mtpc_retrieve($question); $knowledge = '';
 foreach ($retrieved as $i => $chunk) $knowledge .= "\n[S" . ($i + 1) . "] " . $chunk['title'] . "\nURL: " . $chunk['url'] . "\n" . mtpc_excerpt($chunk['text']) . "\n";
-$prompt = 'Bạn là Nhi, trợ lý tuyển sinh Trường Trung cấp Miền Tây tại Cần Thơ. Trả lời tiếng Việt ngắn gọn, thân thiện. Chỉ dùng DỮ LIỆU MTPC bên dưới cho các thông tin cụ thể như học phí, tuyển sinh, ngành học, lịch và chính sách. Không có dữ liệu phù hợp thì nói rõ chưa tìm thấy thông tin chính thức và hướng người dùng liên hệ Zalo 0375 711 766. Không bịa thông tin. Cuối câu trả lời, nếu đã dùng dữ liệu, hãy ghi [S1], [S2] tương ứng.\n\nDỮ LIỆU MTPC:' . ($knowledge ? $knowledge : '\nChưa đồng bộ dữ liệu website.');
+$prompt = 'Bạn là Nhi, trợ lý tuyển sinh Trường Trung cấp Miền Tây tại Cần Thơ. Trả lời tiếng Việt ngắn gọn, thân thiện. Chỉ dùng DỮ LIỆU MTPC bên dưới cho các thông tin cụ thể như học phí, tuyển sinh, ngành học, lịch và chính sách. Ưu tiên nguồn có năm mới hơn. Nếu nguồn ghi ngày không tồn tại hoặc có mâu thuẫn thì phải nói cần xác nhận với trường, không tự sửa ngày. Không có dữ liệu phù hợp thì nói rõ chưa tìm thấy thông tin chính thức và hướng người dùng liên hệ Zalo 0375 711 766. Không bịa thông tin và không tiết lộ thông tin cá nhân. Cuối câu trả lời, nếu đã dùng dữ liệu, hãy ghi [S1], [S2] tương ứng.\n\nDỮ LIỆU MTPC:' . ($knowledge ? $knowledge : '\nChưa đồng bộ dữ liệu website.');
 $model = 'gemini-3.1-flash-lite';
 $payload = json_encode(array('systemInstruction' => array('parts' => array(array('text' => $prompt))), 'contents' => $contents, 'generationConfig' => array('maxOutputTokens' => 700)), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 $curl = curl_init('https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent');

@@ -9,3 +9,5 @@ deployment:
     - /bin/cp -f api/chat56.php $DEPLOYPATH/api/chat.php
     - /bin/cp -f api/live-token56.php $DEPLOYPATH/api/live-token.php
     - /bin/cp -f api/tts56.php $DEPLOYPATH/api/tts.php
+    - /bin/mkdir -p /home/mtpc/private/mtpc-knowledge
+    - /usr/local/bin/php tools/install-knowledge-bundle.php database/knowledge/mtpc-manual-knowledge.json /home/mtpc/private/mtpc-knowledge/manual-bundle.json
