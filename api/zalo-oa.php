@@ -2,7 +2,7 @@
 /* Public Zalo OA webhook owned by mtpc-agent. PHP 5.6 compatible. */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
-define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v8');
+define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v9');
 
 function mtpc_zalo_agent_out($status, $payload) {
     http_response_code($status);
@@ -228,7 +228,7 @@ function mtpc_zalo_agent_generate_reply($question) {
     return function_exists('mb_substr') && mb_strlen($answer, 'UTF-8') > 420 ? rtrim(mb_substr($answer, 0, 417, 'UTF-8')) . '…' : $answer;
 }
 function mtpc_zalo_agent_unverified_reply() {
-    return 'Em chưa có dữ liệu đã được xác thực cho nội dung này nên chưa thể trả lời chính xác. Em xin phép ghi nhận để nhà trường kiểm tra thêm.';
+    return '';
 }
 function mtpc_zalo_agent_direct_reply($question) {
     $normalized = mtpc_zalo_agent_normalize($question);
@@ -292,6 +292,10 @@ try {
             mtpc_zalo_agent_log(array('direction' => 'system', 'event_name' => 'ai_reply_fallback', 'user_id' => $userId, 'text' => $aiError->getMessage()));
             $reply = mtpc_zalo_agent_fallback_reply($text);
         }
+    }
+    if ($reply === '') {
+        mtpc_zalo_agent_log(array('direction' => 'system', 'event_name' => 'unverified_reply_suppressed', 'user_id' => $userId, 'text' => $text));
+        mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => true, 'sent' => false, 'reason' => 'no_verified_answer')));
     }
     mtpc_zalo_agent_send($config, $userId, $reply);
     mtpc_zalo_agent_log(array('direction' => 'outbound', 'event_name' => 'auto_reply_text', 'user_id' => $userId, 'text' => $reply));
