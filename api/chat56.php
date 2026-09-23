@@ -41,9 +41,9 @@ function mtpc_retrieve($question) {
         $body = mtpc_normalize(isset($chunk['text']) ? $chunk['text'] : '');
         if ($title && (strpos($normalizedQuestion, $title) !== false || strpos($title, $normalizedQuestion) !== false)) $score += 8;
         foreach ($terms as $term) { if (strpos($title, $term) !== false) $score += 4; if (strpos($body, $term) !== false) $score += 1; }
-        if (isset($chunk['source_year']) && (int)$chunk['source_year'] >= (int)date('Y')) $score += 2;
-        if (isset($chunk['origin']) && ($chunk['origin'] === 'seed' || $chunk['origin'] === 'upload')) $score += 1;
-        if ($score > 0) $scores[$id] = $score;
+        if ($score > 0 && isset($chunk['source_year']) && (int)$chunk['source_year'] >= (int)date('Y')) $score += 2;
+        if ($score > 0 && isset($chunk['origin']) && ($chunk['origin'] === 'seed' || $chunk['origin'] === 'upload')) $score += 1;
+        if ($score >= 3) $scores[$id] = $score;
     }
     arsort($scores); $picked = array(); $sources = array();
     foreach ($scores as $id => $score) {
@@ -72,7 +72,8 @@ foreach (array_slice($messages, -12) as $message) {
 if (!$contents || $question === '') mtpc_respond(400, array('error' => 'A message is required.'));
 $retrieved = mtpc_retrieve($question); $knowledge = '';
 foreach ($retrieved as $i => $chunk) $knowledge .= "\n[S" . ($i + 1) . "] " . $chunk['title'] . "\nURL: " . $chunk['url'] . "\n" . mtpc_excerpt($chunk['text']) . "\n";
-$prompt = 'Bạn là Nhi, tư vấn viên tuyển sinh Trường Trung cấp Miền Tây tại Cần Thơ. Trò chuyện như một tư vấn viên thật: gần gũi, rõ ràng, lịch sự và chủ động hiểu nhu cầu. Xưng “em”, gọi người dùng là “anh/chị”; dùng “dạ” hoặc “ạ” vừa phải, tối đa một lần mỗi phản hồi. Trả lời thường từ 1 đến 3 câu bằng từ ngữ đời thường, không lặp câu hỏi, không chào lại nếu người dùng không chào, không tự giới thiệu lại và không kết thúc mọi lượt bằng câu liên hệ máy móc. Chỉ hỏi thêm một câu ngắn khi nó giúp tư vấn bước tiếp theo. Không tự chèn số điện thoại hoặc website khi dữ liệu đã đủ. Phân biệt “ngành trường đang đào tạo” với “lớp đang tuyển/đang mở”: danh mục chương trình chính trên website gồm Y sĩ đa khoa, Dược sĩ trung học, Điều dưỡng, Hộ sinh và Công nghệ thông tin – Ứng dụng AI; còn chứng chỉ và liên thông là chương trình theo từng thông báo tuyển sinh. Không dùng một vài thông báo chứng chỉ mới nhất để thay thế toàn bộ danh sách ngành của trường. Chỉ dùng DỮ LIỆU MTPC bên dưới cho học phí, lịch, điều kiện và chính sách. Ưu tiên nguồn có năm mới hơn. Nếu nguồn ghi ngày không tồn tại hoặc có mâu thuẫn thì nói tự nhiên rằng em cần kiểm tra lại với trường, không tự sửa ngày. Chỉ khi dữ liệu không đủ mới hướng người dùng liên hệ Zalo 0375 711 766. Không bịa thông tin và không tiết lộ thông tin cá nhân. Cuối câu trả lời, nếu đã dùng dữ liệu, hãy ghi [S1], [S2] tương ứng.\n\nDỮ LIỆU MTPC:' . ($knowledge ? $knowledge : '\nChưa đồng bộ dữ liệu website.');
+if ($knowledge === '') mtpc_respond(200, array('text' => 'Em chưa có dữ liệu đã được xác thực cho nội dung này nên chưa thể trả lời chính xác. Em xin phép ghi nhận để nhà trường kiểm tra thêm.', 'sources' => array(), 'knowledge_used' => 0, 'model' => null, 'verified' => false));
+$prompt = 'Bạn là Nhi, tư vấn viên tuyển sinh Trường Trung cấp Miền Tây tại Cần Thơ. Trò chuyện như một tư vấn viên thật: gần gũi, rõ ràng và lịch sự. Xưng “em”, gọi người dùng là “anh/chị”; dùng “dạ” hoặc “ạ” tối đa một lần mỗi phản hồi. Trả lời từ 1 đến 3 câu, không lặp câu hỏi, không chào lại nếu người dùng không chào và không tự giới thiệu lại. Phân biệt ngành chính của trường với lớp chứng chỉ hoặc liên thông theo từng đợt; không dùng một vài thông báo chứng chỉ mới nhất để thay thế toàn bộ danh sách ngành của trường. Mọi thông tin thực tế trong câu trả lời phải được nêu trực tiếp trong DỮ LIỆU MTPC bên dưới. Không dùng kiến thức riêng, không suy đoán và không tự bổ sung học phí, lịch, điều kiện, chính sách hoặc chương trình đào tạo. Nếu dữ liệu không trực tiếp chứng minh được câu trả lời, chỉ trả về đúng mã [[KHONG_DU_DU_LIEU]], không viết thêm nội dung khác. Nếu nguồn có ngày mâu thuẫn thì cũng dùng mã đó. Không bịa thông tin và không tiết lộ thông tin cá nhân. Cuối câu trả lời hợp lệ, ghi [S1], [S2] tương ứng.\n\nDỮ LIỆU MTPC:' . $knowledge;
 $model = 'gemini-3.1-flash-lite';
 $payload = json_encode(array('systemInstruction' => array('parts' => array(array('text' => $prompt))), 'contents' => $contents, 'generationConfig' => array('maxOutputTokens' => 700)), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 $curl = curl_init('https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent');
@@ -82,5 +83,6 @@ if ($raw === false || $status < 200 || $status >= 300) mtpc_respond(502, array('
 $response = json_decode($raw, true); $answer = '';
 if (is_array($response) && isset($response['candidates'][0]['content']['parts'])) foreach ($response['candidates'][0]['content']['parts'] as $part) if (isset($part['text'])) $answer .= $part['text'];
 if (trim($answer) === '') mtpc_respond(502, array('error' => 'Gemini returned an empty response.'));
+if (strpos($answer, '[[KHONG_DU_DU_LIEU]]') !== false) mtpc_respond(200, array('text' => 'Em chưa có dữ liệu đã được xác thực cho nội dung này nên chưa thể trả lời chính xác. Em xin phép ghi nhận để nhà trường kiểm tra thêm.', 'sources' => array(), 'knowledge_used' => 0, 'model' => $model, 'verified' => false));
 $sources = array(); foreach ($retrieved as $chunk) $sources[] = array('title' => $chunk['title'], 'url' => $chunk['url']);
-mtpc_respond(200, array('text' => trim($answer), 'sources' => $sources, 'knowledge_used' => count($sources), 'model' => $model));
+mtpc_respond(200, array('text' => trim($answer), 'sources' => $sources, 'knowledge_used' => count($sources), 'model' => $model, 'verified' => true));
