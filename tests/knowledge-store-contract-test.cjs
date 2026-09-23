@@ -20,6 +20,8 @@ const deployment = read('.cpanel.yml');
 assert(chat.includes('manual-bundle.json'), 'website chatbot must load manual knowledge');
 assert(zalo.includes('manual-bundle.json'), 'Zalo Agent must load manual knowledge');
 assert(zalo.includes('mtpc_zalo_agent_direct_reply'), 'Zalo Agent must route greetings and broad program-list questions deterministically');
+assert(zalo.includes("MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v7"), 'Zalo Agent build marker must identify the specific-program routing release');
+assert(zalo.includes('trường có tuyển ngành Trung cấp Y sĩ (Y sĩ đa khoa)'), 'Zalo Agent must answer the supported Y sĩ program directly');
 assert(zalo.toLowerCase().includes('không tự giới thiệu lại') && zalo.toLowerCase().includes('không tự chèn số điện thoại'), 'Zalo prompt must avoid repetitive greetings and unsolicited contact details');
 assert(zalo.includes('tối đa một lần trong mỗi phản hồi') && zalo.includes('tư vấn viên thật'), 'Zalo prompt must enforce a natural conversational voice');
 assert(chat.includes('Không dùng một vài thông báo chứng chỉ mới nhất'), 'website chatbot must distinguish core programs from temporary campaigns');

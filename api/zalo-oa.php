@@ -2,7 +2,7 @@
 /* Public Zalo OA webhook owned by mtpc-agent. PHP 5.6 compatible. */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
-define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v6');
+define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v7');
 
 function mtpc_zalo_agent_out($status, $payload) {
     http_response_code($status);
@@ -228,6 +228,9 @@ function mtpc_zalo_agent_generate_reply($question) {
 function mtpc_zalo_agent_direct_reply($question) {
     $normalized = mtpc_zalo_agent_normalize($question);
     if ($normalized === '' || preg_match('/^(xin chao|chao|hello|hi|alo)$/', $normalized)) return 'Dạ, em chào anh/chị! Em là Nhi 😊 Anh/chị đang muốn tìm hiểu ngành học, học phí hay hồ sơ xét tuyển?';
+    $asksProgramAvailability = strpos($normalized, 'co tuyen') !== false || strpos($normalized, 'tuyen sinh') !== false || strpos($normalized, 'co dao tao') !== false || strpos($normalized, 'truong minh co') !== false;
+    $asksMedicalAssistant = strpos($normalized, 'y si') !== false && strpos($normalized, 'duoc si') === false;
+    if ($asksProgramAvailability && $asksMedicalAssistant) return 'Dạ có, trường có tuyển ngành Trung cấp Y sĩ (Y sĩ đa khoa). Theo thông tin hiện có, điều kiện xét tuyển là tốt nghiệp THPT trở lên; anh/chị muốn em gửi luôn hồ sơ cần chuẩn bị không?';
     $asksCurrentCampaign = strpos($normalized, 'dang tuyen') !== false || strpos($normalized, 'dang mo') !== false || strpos($normalized, 'tuyen sinh') !== false || strpos($normalized, 'nam 2026') !== false || strpos($normalized, 'chung chi') !== false || strpos($normalized, 'lien thong') !== false;
     $asksProgramList = strpos($normalized, 'nganh nao') !== false || strpos($normalized, 'nhung nganh') !== false || strpos($normalized, 'cac nganh') !== false || strpos($normalized, 'dao tao nganh gi') !== false || strpos($normalized, 'hoc gi o truong') !== false;
     if ($asksProgramList && !$asksCurrentCampaign) return 'Trường hiện có 5 ngành chính: Y sĩ đa khoa, Dược sĩ trung học, Điều dưỡng, Hộ sinh và Công nghệ thông tin – Ứng dụng AI. Anh/chị đang quan tâm khối sức khỏe hay công nghệ để em tư vấn kỹ hơn ạ?';
