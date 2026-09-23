@@ -2,7 +2,7 @@
 /* Public Zalo OA webhook owned by mtpc-agent. PHP 5.6 compatible. */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
-define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v4');
+define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v5');
 
 function mtpc_zalo_agent_out($status, $payload) {
     http_response_code($status);
