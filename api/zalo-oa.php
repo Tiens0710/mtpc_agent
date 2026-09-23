@@ -2,7 +2,7 @@
 /* Public Zalo OA webhook owned by mtpc-agent. PHP 5.6 compatible. */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
-define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v10');
+define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v11');
 
 function mtpc_zalo_agent_out($status, $payload) {
     http_response_code($status);
@@ -244,6 +244,13 @@ function mtpc_zalo_agent_generate_reply($question) {
 function mtpc_zalo_agent_unverified_reply() {
     return '';
 }
+function mtpc_zalo_agent_log_unanswered($question) {
+    $path = '/home/mtpc/private/mtpc-knowledge/unanswered.jsonl';
+    $text = function_exists('mb_substr') ? mb_substr(trim((string)$question), 0, 1000, 'UTF-8') : substr(trim((string)$question), 0, 1000);
+    if ($text === '') return;
+    $entry = json_encode(array('created_at' => gmdate('c'), 'channel' => 'zalo', 'question' => $text, 'reason' => 'no_verified_answer'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if ($entry !== false) @file_put_contents($path, $entry . "\n", FILE_APPEND | LOCK_EX);
+}
 function mtpc_zalo_agent_direct_reply($question) {
     $normalized = mtpc_zalo_agent_normalize($question);
     if ($normalized === '' || preg_match('/^(xin chao|chao|hello|hi|alo)$/', $normalized)) return 'Dạ, em chào anh/chị! Em là Nhi 😊 Anh/chị đang muốn tìm hiểu ngành học, học phí hay hồ sơ xét tuyển?';
@@ -308,6 +315,7 @@ try {
         }
     }
     if ($reply === '') {
+        mtpc_zalo_agent_log_unanswered($text);
         mtpc_zalo_agent_log(array('direction' => 'system', 'event_name' => 'unverified_reply_suppressed', 'user_id' => $userId, 'text' => $text));
         mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => true, 'sent' => false, 'reason' => 'no_verified_answer')));
     }
