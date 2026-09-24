@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "built_at": "2026-09-22T13:33:23.084471+00:00",
-  "source_count": 16,
-  "active_source_count": 10,
-  "chunk_count": 14,
+  "built_at": "2026-09-24T00:00:00+00:00",
+  "source_count": 17,
+  "active_source_count": 11,
+  "chunk_count": 15,
   "sources": [
     {
       "id": "manual-cd8827838cdf9a50",
@@ -228,6 +228,19 @@
       "updated_at": "2026-09-22T13:33:23.084471+00:00",
       "sha256": "fabd9b43b9c1417740a271334fd6068f42fe5a82bf4ea19760f523e43b02cfeb",
       "text": "Chứng chỉ Xoa bóp bấm huyệt và Vật lý trị liệu, thời lượng 2 tháng. Đối tượng là người lao động có đủ sức khỏe và trình độ học vấn phù hợp với nghề. Học thứ bảy, chủ nhật. Cơ hội việc làm gồm tự mở dịch vụ massage, làm kỹ thuật viên tại trung tâm chăm sóc sức khỏe, sắc đẹp, viện dưỡng lão hoặc cơ sở y tế, và hỗ trợ trị liệu phục hồi chức năng. Liên hệ 02922226677 hoặc 0934790790."
+    },
+    {
+      "id": "manual-cover2-active-confirmed-20260924",
+      "title": "Các chương trình và khóa trong cover2 được xác nhận đang tuyển",
+      "file_name": "cover2.pptx — trạng thái tuyển sinh xác nhận 2026",
+      "relative_path": "cover2.pptx",
+      "type": "Tuyển sinh",
+      "year": 2026,
+      "active": true,
+      "origin": "seed",
+      "warning": "Quản trị viên xác nhận ngày 24/09/2026 rằng tất cả chương trình/khóa được nêu tên trong cover2.pptx hiện đang tuyển. Chỉ xác nhận trạng thái tuyển; không dùng hạn tuyển, học phí, thời lượng, lịch học hoặc điều kiện cũ trong slide nếu chưa được xác nhận riêng.",
+      "updated_at": "2026-09-24T00:00:00+00:00",
+      "text": "XÁC NHẬN HIỆN TRẠNG TUYỂN SINH NGÀY 24/09/2026: Theo xác nhận trực tiếp của quản trị viên, tất cả chương trình/khóa được nêu tên trong cover2.pptx hiện đều đang tuyển. Danh sách đọc được trong tài liệu gồm: Trung cấp Xây dựng dân dụng – công nghiệp; Thương mại điện tử; các nghề sơ cấp Hàn công nghệ cao, Sơn ô tô, Sửa chữa máy tính; Tin học văn phòng chuẩn quốc tế MOS; Chứng chỉ nghiệp vụ pha chế thức uống (Bartender/Barista). Tài liệu cũng nêu tuyển chuyển đổi văn bằng 2 sang Y sĩ/Dược sĩ và liên thông từ trung cấp/cao đẳng lên đại học, có liên kết với Đại học Trà Vinh; không tự suy ra ngành liên thông cụ thể ngoài nội dung đã được nguồn khác xác nhận. Phần lớp ngắn hạn đề cập xoa bóp bấm huyệt và phục hồi chức năng. Các ngày 2016, 2020, 2021, 2022, 2025 cùng học phí, thời lượng, điều kiện và lịch cũ trong slide không được xem là thông tin hiện hành; chỉ trạng thái đang tuyển nêu ở đây đã được quản trị viên xác nhận."
     }
   ],
   "chunks": [
@@ -383,6 +396,17 @@
       "source_type": "Tuyển sinh",
       "source_year": 2026,
       "updated_at": "2026-09-22T13:33:23.084471+00:00",
+      "origin": "seed"
+    },
+    {
+      "id": "manual-cover2-active-confirmed-20260924-chunk-1",
+      "source_id": "manual-cover2-active-confirmed-20260924",
+      "url": "https://mtpc.edu.vn/tuyen-sinh",
+      "title": "Các chương trình và khóa trong cover2 được xác nhận đang tuyển",
+      "text": "XÁC NHẬN HIỆN TRẠNG TUYỂN SINH NGÀY 24/09/2026: Theo xác nhận trực tiếp của quản trị viên, tất cả chương trình/khóa được nêu tên trong cover2.pptx hiện đều đang tuyển. Danh sách đọc được trong tài liệu gồm: Trung cấp Xây dựng dân dụng – công nghiệp; Thương mại điện tử; các nghề sơ cấp Hàn công nghệ cao, Sơn ô tô, Sửa chữa máy tính; Tin học văn phòng chuẩn quốc tế MOS; Chứng chỉ nghiệp vụ pha chế thức uống (Bartender/Barista). Tài liệu cũng nêu tuyển chuyển đổi văn bằng 2 sang Y sĩ/Dược sĩ và liên thông từ trung cấp/cao đẳng lên đại học, có liên kết với Đại học Trà Vinh; không tự suy ra ngành liên thông cụ thể ngoài nội dung đã được nguồn khác xác nhận. Phần lớp ngắn hạn đề cập xoa bóp bấm huyệt và phục hồi chức năng. Các ngày 2016, 2020, 2021, 2022, 2025 cùng học phí, thời lượng, điều kiện và lịch cũ trong slide không được xem là thông tin hiện hành; chỉ trạng thái đang tuyển nêu ở đây đã được quản trị viên xác nhận.",
+      "source_type": "Tuyển sinh",
+      "source_year": 2026,
+      "updated_at": "2026-09-24T00:00:00+00:00",
       "origin": "seed"
     }
   ],
