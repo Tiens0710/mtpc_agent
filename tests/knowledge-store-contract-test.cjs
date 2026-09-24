@@ -21,7 +21,7 @@ const deployment = read('.cpanel.yml');
 assert(chat.includes('manual-bundle.json'), 'website chatbot must load manual knowledge');
 assert(zalo.includes('manual-bundle.json'), 'Zalo Agent must load manual knowledge');
 assert(zalo.includes('mtpc_zalo_agent_direct_reply'), 'Zalo Agent must route greetings and broad program-list questions deterministically');
-assert(zalo.includes("MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v11"), 'Zalo Agent build marker must identify the admin feedback release');
+assert(zalo.includes("MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v12"), 'Zalo Agent build marker must identify the active admissions source release');
 assert(zalo.includes('trường có tuyển ngành Trung cấp Y sĩ (Y sĩ đa khoa)'), 'Zalo Agent must answer the supported Y sĩ program directly');
 assert(zalo.includes('mtpc_zalo_agent_verified_answer') && zalo.includes("'responseMimeType' => 'application/json'"), 'Zalo Agent must require structured Gemini evidence review');
 assert(chat.includes('mtpc_verified_review') && chat.includes("'responseMimeType' => 'application/json'"), 'website Agent must require structured Gemini evidence review');
