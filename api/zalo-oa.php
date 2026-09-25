@@ -2,7 +2,8 @@
 /* Public Zalo OA webhook owned by mtpc-agent. PHP 5.6 compatible. */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
-define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v12');
+require_once __DIR__ . '/zalo-conversation.php';
+define('MTPC_ZALO_AGENT_BUILD', 'agent-zalo-v13');
 
 function mtpc_zalo_agent_out($status, $payload) {
     http_response_code($status);
@@ -175,7 +176,7 @@ function mtpc_zalo_agent_verified_answer($raw, $maxEvidence) {
     if (!$hasValidEvidence) return '';
     return trim(preg_replace('/\s+/u', ' ', strip_tags((string)$review['answer'])));
 }
-function mtpc_zalo_agent_knowledge($question) {
+function mtpc_zalo_agent_knowledge($question, $history = array()) {
     $dir = '/home/mtpc/private/mtpc-knowledge';
     $website = mtpc_zalo_agent_read_json($dir . '/chunks.json');
     $manual = mtpc_zalo_agent_read_json($dir . '/manual-bundle.json');
@@ -184,13 +185,19 @@ function mtpc_zalo_agent_knowledge($question) {
     if (isset($website['chunks']) && is_array($website['chunks'])) $all = array_merge($all, $website['chunks']);
     if (isset($manual['chunks']) && is_array($manual['chunks'])) $all = array_merge($all, $manual['chunks']);
     if (!$all) return '';
-    $terms = array_filter(explode(' ', mtpc_zalo_agent_normalize($question)), function($term) { return strlen($term) >= 2; });
+    $contextualQuestion = mtpc_zalo_agent_history_contextual_query($question, $history);
+    $conversionDetail = mtpc_zalo_agent_history_is_conversion_detail_followup($question, $history);
+    $terms = array_filter(explode(' ', mtpc_zalo_agent_normalize($contextualQuestion)), function($term) { return strlen($term) >= 2; });
     $scores = array();
     $indexedTerms = isset($index['terms']) && is_array($index['terms']) ? $index['terms'] : array();
     foreach ($terms as $term) if (isset($indexedTerms[$term]) && is_array($indexedTerms[$term])) foreach ($indexedTerms[$term] as $id) $scores[$id] = isset($scores[$id]) ? $scores[$id] + 3 : 3;
     $byId = array();
     foreach ($all as $chunk) if (is_array($chunk) && !empty($chunk['id'])) $byId[(string)$chunk['id']] = $chunk;
     foreach ($byId as $id => $chunk) {
+        if ($conversionDetail && !mtpc_zalo_agent_history_chunk_has_current_conversion_detail($chunk, (int)date('Y'))) {
+            unset($scores[$id]);
+            continue;
+        }
         $haystack = mtpc_zalo_agent_normalize((isset($chunk['title']) ? $chunk['title'] : '') . ' ' . (isset($chunk['text']) ? $chunk['text'] : ''));
         $score = isset($scores[$id]) ? $scores[$id] : 0;
         foreach ($terms as $term) if (strpos($haystack, $term) !== false) $score++;
@@ -214,7 +221,7 @@ function mtpc_zalo_agent_knowledge($question) {
     }
     return $context;
 }
-function mtpc_zalo_agent_generate_reply($question) {
+function mtpc_zalo_agent_generate_reply($question, $history = array()) {
     $apiKey = getenv('GEMINI_API_KEY');
     $privateConfig = '/home/mtpc/private/gemini-config.php';
     if (!$apiKey && is_file($privateConfig)) {
@@ -222,12 +229,14 @@ function mtpc_zalo_agent_generate_reply($question) {
         $apiKey = isset($GEMINI_API_KEY) ? $GEMINI_API_KEY : '';
     }
     if (!$apiKey) throw new Exception('Chưa cấu hình GEMINI_API_KEY cho Agent Zalo.');
-    $knowledge = mtpc_zalo_agent_knowledge($question);
+    $knowledge = mtpc_zalo_agent_knowledge($question, $history);
     if ($knowledge === '') return mtpc_zalo_agent_unverified_reply();
-    $prompt = 'Bạn là Nhi, tư vấn viên tuyển sinh của Trường Trung cấp Miền Tây tại Cần Thơ. Trước tiên hãy tự kiểm tra bằng chứng, sau đó mới được soạn câu trả lời. Mọi thông tin thực tế phải được nêu trực tiếp trong DỮ LIỆU MTPC; không dùng kiến thức riêng, không suy đoán và không tự bổ sung học phí, lịch, điều kiện, chính sách hoặc chương trình đào tạo. Nguồn có xác nhận trực tiếp của quản trị viên ngày 24/09/2026 về trạng thái đang tuyển được dùng để xác nhận trạng thái của đúng các chương trình/khóa được liệt kê trong nguồn; xác nhận này không làm cho hạn tuyển, học phí, thời lượng, điều kiện hoặc lịch cũ trong slide trở thành hiện hành. Nếu nguồn không trực tiếp trả lời, đã cũ, mâu thuẫn hoặc không rõ hiệu lực thì supported phải là false. Nếu đủ bằng chứng, trả lời như một tư vấn viên thật, gần gũi và rõ ràng trong 1 đến 3 câu; xưng “em”, gọi người dùng là “anh/chị”, dùng “dạ” hoặc “ạ” tối đa một lần trong mỗi phản hồi, không chào lại, không tự giới thiệu lại và không tự chèn số điện thoại hoặc website. Chỉ xuất một JSON hợp lệ theo mẫu {"supported":true,"answer":"Nội dung trả lời","evidence":[1,2]}. evidence là số thứ tự nguồn thực sự chứng minh câu trả lời. Khi không đủ dữ liệu, xuất {"supported":false,"answer":"","evidence":[]}. Không viết Markdown hoặc nội dung ngoài JSON. DỮ LIỆU MTPC:' . $knowledge;
+    $prompt = 'Bạn là Nhi, tư vấn viên tuyển sinh của Trường Trung cấp Miền Tây tại Cần Thơ. Hãy trả lời câu hỏi mới nhất; đọc lịch sử hội thoại chỉ để hiểu chủ đề, bằng cấp người hỏi và các từ như “vậy”, “còn thời gian”, không cần hỏi lại điều đã có trong lịch sử. Lịch sử chat không phải bằng chứng về thông tin của trường; mọi dữ kiện thực tế phải được chứng minh trực tiếp bởi DỮ LIỆU MTPC bên dưới. Không dùng kiến thức riêng, không suy đoán, không lấy câu trả lời trước của bạn làm nguồn và tuyệt đối không đổi sang một khóa/ngành khác chỉ vì kết quả tìm kiếm có nhắc đến khóa đó. Đặc biệt, khi được hỏi thời lượng/học phí/điều kiện của một lộ trình chuyển đổi, chỉ trả lời nếu nguồn hiện hành nói rõ đúng lộ trình và dữ kiện được hỏi; nếu không, supported phải là false. Nguồn có xác nhận trực tiếp của quản trị viên ngày 24/09/2026 về trạng thái đang tuyển chỉ xác nhận trạng thái của đúng chương trình được liệt kê; xác nhận đó không làm cho thời hạn, học phí, thời lượng, điều kiện hoặc lịch cũ trong slide trở thành hiện hành. Nếu nguồn không trực tiếp trả lời, đã cũ, mâu thuẫn hoặc không rõ hiệu lực thì supported phải là false. Nếu đủ bằng chứng, trả lời như một tư vấn viên thật, gần gũi và rõ ràng trong 1 đến 3 câu; xưng “em”, gọi người dùng là “anh/chị”, dùng “dạ” hoặc “ạ” tối đa một lần trong mỗi phản hồi, không chào lại, không tự giới thiệu lại và không tự chèn số điện thoại hoặc website. Chỉ xuất một JSON hợp lệ theo mẫu {"supported":true,"answer":"Nội dung trả lời","evidence":[1,2]}. evidence là số thứ tự nguồn thực sự chứng minh câu trả lời. Khi không đủ dữ liệu, xuất {"supported":false,"answer":"","evidence":[]}. Không viết Markdown hoặc nội dung ngoài JSON. DỮ LIỆU MTPC:' . $knowledge;
+    $contents = mtpc_zalo_agent_history_contents($history, $question);
+    if (!$contents) return mtpc_zalo_agent_unverified_reply();
     $payload = json_encode(array(
         'systemInstruction' => array('parts' => array(array('text' => $prompt))),
-        'contents' => array(array('role' => 'user', 'parts' => array(array('text' => function_exists('mb_substr') ? mb_substr($question, 0, 4000, 'UTF-8') : substr($question, 0, 4000))))),
+        'contents' => $contents,
         'generationConfig' => array('maxOutputTokens' => 260, 'temperature' => 0.2, 'responseMimeType' => 'application/json')
     ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     $curl = curl_init('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent');
@@ -303,10 +312,13 @@ mtpc_zalo_agent_log(array('direction' => 'inbound', 'event_name' => $eventName, 
 if (!$config['auto_reply'] || !$isUserText) mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => (bool)$config['auto_reply'], 'sent' => false)));
 
 try {
+    $historyDirectory = mtpc_zalo_agent_history_directory();
+    mtpc_zalo_agent_history_append($userId, 'user', $text, $historyDirectory, time());
+    $conversationHistory = mtpc_zalo_agent_history_read($userId, $historyDirectory, time());
     $reply = mtpc_zalo_agent_direct_reply($text);
     if ($reply === '') {
         try {
-            $reply = mtpc_zalo_agent_generate_reply($text);
+            $reply = mtpc_zalo_agent_generate_reply($text, $conversationHistory);
         } catch (Exception $aiError) {
             error_log('[MTPC_AGENT_ZALO_AI] ' . $aiError->getMessage());
             mtpc_zalo_agent_log(array('direction' => 'system', 'event_name' => 'ai_reply_fallback', 'user_id' => $userId, 'text' => $aiError->getMessage()));
@@ -319,6 +331,7 @@ try {
         mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => true, 'sent' => false, 'reason' => 'no_verified_answer')));
     }
     mtpc_zalo_agent_send($config, $userId, $reply);
+    mtpc_zalo_agent_history_append($userId, 'model', $reply, $historyDirectory, time());
     mtpc_zalo_agent_log(array('direction' => 'outbound', 'event_name' => 'auto_reply_text', 'user_id' => $userId, 'text' => $reply));
     mtpc_zalo_agent_out(200, array('ok' => true, 'received' => true, 'auto_reply' => array('enabled' => true, 'sent' => true)));
 } catch (Exception $error) {
