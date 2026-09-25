@@ -96,6 +96,8 @@ check(strpos($boundedHistory[count($boundedHistory) - 1]['text'], 'bounded messa
 check(count(mtpc_zalo_agent_history_read($userA, $directory, $now + 86450)) === 0, 'expire conversation after 24 hours');
 
 foreach (glob($directory . DIRECTORY_SEPARATOR . '*') as $path) if (is_file($path)) @unlink($path);
+@unlink($directory . DIRECTORY_SEPARATOR . '.last-pruned');
+@unlink($directory . DIRECTORY_SEPARATOR . '.prune.lock');
 if (is_dir($directory)) @rmdir($directory);
 
 echo "zalo-conversation-history: history, isolation, expiry, and evidence guards passed\n";
